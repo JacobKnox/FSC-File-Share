@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'testing' => False
+    'testing' => True
 ];

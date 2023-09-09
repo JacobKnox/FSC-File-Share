@@ -5,8 +5,8 @@
 
 <nav class="navbar sticky-top navbar-expand-md" style="background-color:#BA0C2F; color:white;">
     <ul class="navbar-nav mx-auto">
-        <div class="nav-item">
-            <a class="navbar-brand mx-0 mr-md-2" href="/">FSC File Share</a>
+        <div class="nav-item text-center">
+            <a class="navbar-brand mx-0 mr-md-2" href="/"><img src="{{ asset('img/fsc-logo.png') }}" alt="FSC Logo" width="44" height="40"></a>
         </div>
         <div class="nav-item text-center">
             <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
