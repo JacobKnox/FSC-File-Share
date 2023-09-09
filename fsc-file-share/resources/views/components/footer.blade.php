@@ -1,7 +1,7 @@
-<div class="container text-center text-md-left">
+<div class="container text-center text-md-start">
     <footer class="row py-5 my-5 border-top">
       <div class="col-12 col-sm-6 col-md-3 mb-3">
-        <a class="text-muted" href="#">Jacob Knox</a>
+        <a class=" nav-link text-muted" href="#">Jacob Knox</a>
         <p class="text-muted">© 2023</p>
       </div>
       <div class="col-12 col-sm-6 col-md-3 mb-3">
