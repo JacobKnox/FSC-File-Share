@@ -1,7 +1,4 @@
-<x-template>
-    <x-slot:pageName>
-        Home
-    </x-slot>
+<x-template pageName="Home">
     <div class="container-fluid">
         <div class="row mx-2 px-2">
             <div class="col-12 col-md-6">

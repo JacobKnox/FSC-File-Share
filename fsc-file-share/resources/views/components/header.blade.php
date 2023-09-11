@@ -19,14 +19,14 @@
         <ul class="navbar-nav mr-auto flex-fill">
             <a class="{{$buttonClasses}}" href="/" style="{{$buttonStyles}}">Home</a>
             <a class="{{$buttonClasses}}" href="#" style="{{$buttonStyles}}">Files</a>
-            <!-- If the user is logged in (authenticated), then display appropriate links -->
-            @if(Auth::check() || config('myconfig.testing'))
+            {{-- If the user is logged in (authenticated), then display appropriate links --}}
+            @if(Auth::check() || config('myconfig.testing')) {{-- Convert to @auth when account system is implemented --}}
                 <a class="{{$buttonClasses}}" href="#" style="{{$buttonStyles}}">Profile</a>
                 <a class="{{$buttonClasses}}" href="#" style="{{$buttonStyles}}">Settings</a>
                 <span class="navbar-text text-center d-md-none text-white">Welcome, user!</span>
-            <!-- If they're not, then show the appropriate option to log in -->
+            {{-- If they're not, then show the appropriate option to log in --}}
             @else
-                <!-- Login button, hidden on screens medium or bigger -->
+                {{-- Login button, hidden on screens medium or bigger --}}
                 <a class="{{$buttonClasses}} d-md-none" href="/login" style="{{$buttonStyles}}">Login</a>
                 <a class="{{$buttonClasses}} d-md-none" href="/signup" style="{{$buttonStyles}}">Sign Up</a>
             @endif
@@ -34,7 +34,7 @@
         @if(Auth::check() || config('myconfig.testing'))
             <span class="navbar-text d-none d-md-flex text-white flex-fill justify-content-end">Welcome, user!</span>
         @else
-            <!-- Login form, hidden on screens smaller than medium (when burger pops up) -->
+            {{-- Login form, hidden on screens smaller than medium (when burger pops up) --}}
             <ul class="my-0">
                 <form class="form-inline d-none d-md-block" method="POST">
                     @csrf

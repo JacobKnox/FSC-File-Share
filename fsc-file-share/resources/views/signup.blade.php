@@ -1,5 +1,3 @@
-<x-template>
-    <x-slot:pageName>
-        Sign Up
-    </x-slot>
+<x-template pageName="Sign Up">
+
 </x-template>

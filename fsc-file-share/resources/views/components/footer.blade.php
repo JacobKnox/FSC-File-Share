@@ -9,7 +9,7 @@
         <ul class="nav flex-column">
             <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Home</a></li>
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Files</a></li>
-            @if(Auth::check() || config('myconfig.testing'))
+            @if(Auth::check() || config('myconfig.testing')) {{-- Convert to @auth when account system is implemented --}}
                 <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Profile</a></li>
                 <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Settings</a></li>
             @else
