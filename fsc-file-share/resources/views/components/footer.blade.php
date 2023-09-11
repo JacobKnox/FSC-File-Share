@@ -7,14 +7,14 @@
       <div class="col-12 col-sm-6 col-md-3 mb-3">
         <h5>Site Map</h5>
         <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
+            <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Home</a></li>
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Files</a></li>
             @if(Auth::check() || config('myconfig.testing'))
                 <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Profile</a></li>
                 <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Settings</a></li>
             @else
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Login</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Sign Up</a></li>
+                <li class="nav-item mb-2"><a href="/login" class="nav-link p-0 text-muted">Login</a></li>
+                <li class="nav-item mb-2"><a href="/signup" class="nav-link p-0 text-muted">Sign Up</a></li>
             @endif
         </ul>
       </div>
@@ -31,7 +31,7 @@
         <h5>Contact</h5>
         <ul class="nav flex-column">
           <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">jacobknoxa@gmail.com</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Bug Report</a></li>
+          <li class="nav-item mb-2"><a href="/bug" class="nav-link p-0 text-muted">Bug Report</a></li>
         </ul>
       </div>
     </footer>

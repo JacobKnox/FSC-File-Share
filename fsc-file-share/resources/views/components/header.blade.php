@@ -27,8 +27,8 @@
             <!-- If they're not, then show the appropriate option to log in -->
             @else
                 <!-- Login button, hidden on screens medium or bigger -->
-                <a class="{{$buttonClasses}} d-md-none" href="#" style="{{$buttonStyles}}">Login</a>
-                <a class="{{$buttonClasses}} d-md-none" href="#" style="{{$buttonStyles}}">Sign Up</a>
+                <a class="{{$buttonClasses}} d-md-none" href="/login" style="{{$buttonStyles}}">Login</a>
+                <a class="{{$buttonClasses}} d-md-none" href="/signup" style="{{$buttonStyles}}">Sign Up</a>
             @endif
         </ul>
         @if(Auth::check() || config('myconfig.testing'))
@@ -36,7 +36,9 @@
         @else
             <!-- Login form, hidden on screens smaller than medium (when burger pops up) -->
             <ul class="my-0">
-                <form class="form-inline d-none d-md-block">
+                <form class="form-inline d-none d-md-block" method="POST">
+                    @csrf
+
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">@</span>
@@ -46,7 +48,7 @@
                         <button class="btn btn-success ml-md-2" type="submit">Login</button>
                     </div>
                 </form>
-                <span class="navbar-text d-none d-md-block py-0 align-right text-white" style="font-size: x-small;">Don't have an account? <a href="#" class="text-white">Create one!</a></span>
+                <span class="navbar-text d-none d-md-block py-0 align-right text-white" style="font-size: x-small;">Don't have an account? <a href="/signup" class="text-white">Create one!</a></span>
             </ul>
         @endif
     </div>  
