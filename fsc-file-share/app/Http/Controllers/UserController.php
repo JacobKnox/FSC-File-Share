@@ -65,12 +65,8 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        /*
-        Username will need following validation:
-        exists: https://laravel.com/docs/10.x/validation#rule-exists
-        */
         $credentials = $request->validate([
-            'username' => ['required'],
+            'username' => ['required', 'exists:users,username'],
             'password' => ['required'],
         ]);
 
@@ -81,7 +77,7 @@ class UserController extends Controller
         }
  
         return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
+            'credentials' => 'The provided credentials do not match our records.',
         ])->onlyInput('username');
     }
 }

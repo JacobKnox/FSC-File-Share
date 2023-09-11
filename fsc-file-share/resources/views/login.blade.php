@@ -3,16 +3,22 @@
         @csrf
 
         <div>
-            <label for="username" class="form-label">Username</label>
+            <label for="username" class="form-label" value="{{old('username')}}">Username</label>
             <input type="text" name="username" id="username" class="form-control @error('username') is-invalid @enderror">
+            @error('username')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
         </div>
         <div>
             <label for="password" class="form-label">Password</label>
-            <input type="password" name="password" id="password" class="form-control @error('username') is-invalid @enderror">
+            <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror">
+            @error('password')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
         </div>
-        @error('username')
+        <button type="submit" class="btn btn-success">Login</button>
+        @error('credentials')
             <div class="alert alert-danger">{{ $message }}</div>
         @enderror
-        <button type="submit" class="btn btn-success">Login</button>
     </form>
 </x-template>
