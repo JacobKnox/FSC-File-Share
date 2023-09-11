@@ -16,7 +16,9 @@
     </head>
     <body>
         <x-header/>
-        {{ $slot }}
+        <div class="mx-2 px-2">
+            {{ $slot }}
+        </div>
         <x-footer/>
 
         <!-- Bootstrap JavaScript: first Popper.js, then Bootstrap JS -->

@@ -1,6 +1,6 @@
 <x-template pageName="Home">
     <div class="container-fluid">
-        <div class="row mx-2 px-2">
+        <div class="row">
             <div class="col-12 col-md-6">
                 <p class="fs-2 fw-semibold">Mission</p>
                 <p>FSC File Share is a file sharing website that is meant to act as a public repository for works produced by students of Florida Southern College. These works can include, but not be limited to, essays, research papers, and presentations.</p>
