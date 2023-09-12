@@ -1,6 +1,6 @@
 @php
-    $buttonStyles = "background-color: #0032A0; color: white; border: 2px black solid; border-radius: 10px; min-width: 80px;";
-    $buttonClasses = "nav-item nav-link mx-0 mx-md-1 my-1 my-md-0 btn-block text-center"
+    $buttonStyles = "background-color: #0032A0; min-width: 80px;";
+    $buttonClasses = "nav-item nav-link mx-0 mx-md-1 my-1 my-md-0 btn-block text-center text-white border rounded-pill border-2 border-dark"
 @endphp
 
 <nav class="navbar sticky-top navbar-expand-md text-white mb-4 py-3 px-3" style="background-color:#BA0C2F;">
@@ -36,7 +36,7 @@
         @else
             {{-- Login form, hidden on screens smaller than medium (when burger pops up) --}}
             <ul class="my-0">
-                <form class="form-inline d-none d-md-block" method="POST">
+                <form class="form-inline d-none d-md-block" method="POST" action="/login">
                     @csrf
 
                     <div class="input-group">
