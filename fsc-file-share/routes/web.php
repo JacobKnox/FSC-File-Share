@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BugController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,16 +19,16 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/login', function () {
-    return view('login');
+Route::controller(BugController::class)->group(function () {
+    Route::get('/bug', 'create');
+    Route::post('/bug', 'store');
 });
 
-Route::get('/signup', function () {
-    return view('signup');
+Route::controller(UserController::class)->group(function () {
+    Route::middleware(['guest'])->group(function () {
+        Route::get('/login', 'enter');
+        Route::get('/signup', 'create');
+        Route::post('/login', 'login');
+        Route::post('/signup', 'store');
+    });
 });
-
-Route::get('/bug', function () {
-    return view('bugreport');
-});
-
-Route::post('/login', [UserController::class, 'login']);

@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller
+class BugController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,15 +19,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('signup');
-    }
-
-    /**
-     * Show the form for logging in.
-     */
-    public function enter()
-    {
-        return view('login');
+        return view('bugreport');
     }
 
     /**
@@ -69,23 +60,5 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
-    }
-
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'username' => ['required', 'exists:users,username'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
- 
-            return redirect()->intended('index');
-        }
- 
-        return back()->withErrors([
-            'credentials' => 'The provided credentials do not match our records.',
-        ])->onlyInput('username');
     }
 }
