@@ -30,7 +30,7 @@
       <div class="col-12 col-sm-6 col-md-3 mb-3">
         <h5>Contact</h5>
         <ul class="nav flex-column">
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">jacobknoxa@gmail.com</a></li>
+          <li class="nav-item mb-2"><a href="mailto:jacobknoxa@gmail.com" class="nav-link p-0 text-muted">jacobknoxa@gmail.com</a></li>
           <li class="nav-item mb-2"><a href="/bug" class="nav-link p-0 text-muted">Bug Report</a></li>
         </ul>
       </div>

@@ -36,7 +36,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'status' => 'required',
+            'name' => 'required',
+            'id' => 'required|min_digits:7|unique:users,sid',
+            'username' => 'required|unique:users,username',
+            'email' => 'required|email|ends_with:flsouthern.edu|unique:users,semail',
+            'pemail' => 'sometimes|required|email|unique:users,pemail',
+            'password' => 'required',
+            'cpassword' => 'required|same:password',
+            'terms' => 'accepted',
+            'policy' => 'accepted',
+        ]);
     }
 
     /**

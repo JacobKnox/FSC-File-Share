@@ -55,9 +55,6 @@
             </div>
             
             <button type="submit" class="btn btn-success">Submit</button>
-            @error('credentials')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
         </form>
     </div>
 </x-template>
