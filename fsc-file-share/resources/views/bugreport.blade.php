@@ -4,6 +4,21 @@
             @csrf
             <div class="row justify-content-center mb-2 text-start">
                 <div class="col-8">
+                    <label for="category" class="form-label"><x-asterisk></x-asterisk> Bug Category</label>
+                    <select name="category" id="category" class="form-control">
+                        <option value="select" selected disabled>Select a category:</option>
+                        <option value="text-error">Misspelling/Grammer</option>
+                        <option value="visual">Visual/Image</option>
+                        <option value="security">Security Vulnerability</option>
+                        <option value="other">Other</option>
+                    </select>
+                    @error('category')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>   
+            </div>
+            <div class="row justify-content-center mb-2 text-start">
+                <div class="col-8">
                     <label for="intended" class="form-label"><x-asterisk></x-asterisk> Intended Action</label>
                     <textarea name="intended" id="intended" class="form-control @error('intended') is-invalid @enderror" value="{{ old('intended') }}" placeholder="Enter what you were trying to do in as much detail as possible."></textarea>
                     @error('intended')
@@ -23,17 +38,8 @@
             <div class="row justify-content-center mb-2 text-start">
                 <div class="col-8">
                     <label for="page" class="form-label"><x-asterisk></x-asterisk> Page</label>
-                    <input type="url" name="page" id="page" class="form-control @error('page') is-invalid @enderror" value="{{ old('page') }}" placeholder="URL of page where bug happened">
+                    <input type="text" name="page" id="page" class="form-control @error('page') is-invalid @enderror" value="{{ old('page') }}" placeholder="URL of page where bug happened">
                     @error('page')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </div>  
-            </div>
-            <div class="row justify-content-center mb-2 text-start">
-                <div class="col-8">
-                    <label for="image" class="form-label">Screenshot</label>
-                    <input type="file" name="image" id="image" class="form-control @error('image') is-invalid @enderror" value="{{ old('image') }}">
-                    @error('image')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>  
