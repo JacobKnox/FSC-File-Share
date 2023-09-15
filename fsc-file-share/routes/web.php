@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BugController;
+use App\Http\Controllers\EmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,17 @@ Route::controller(UserController::class)->group(function () {
         Route::post('/signup', 'create');
     });
 
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', /*'verified'*/])->group(function () {
         Route::get('/logout', 'unauthenticate');
     });
 });
+
+/*
+Route::controller(EmailController::class)->group(function () {
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/email/verify', 'notice')->name('verification.notice');
+        Route::get('/email/verify/{id}/{hash}', 'verify')->middleware(['signed'])->name('verification.verify');
+        Route::post('/email/verification-notification', 'send')->middleware(['throttle:6,1'])->name('verification.send');
+    });
+});
+*/

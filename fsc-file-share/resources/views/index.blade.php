@@ -33,4 +33,11 @@
             </div>
         </div>
     </div>
+
+
+    {{-- <form method="POST" action="/email/verification-notification">
+        @csrf
+
+        <button type="submit">Resend</button>
+    </form> --}}
 </x-template>

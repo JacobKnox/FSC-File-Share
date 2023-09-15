@@ -59,7 +59,7 @@ class UserController extends Controller
 
         $validatedData = $validator->valid();
 
-        User::create([
+        $user = User::create([
             'status' => $validatedData['status'],
             'name' => $validatedData['name'],
             'sid' => intval($validatedData['id']),
@@ -76,8 +76,10 @@ class UserController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
- 
-            return redirect('index');
+            # $user->sendEmailVerificationNotification();
+            # return redirect('/email/verify');
+
+            return redirect('/');
         }
     }
 
@@ -121,7 +123,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect('login')->withErrors($validator->errors());
+            return redirect('/login')->withErrors($validator->errors());
         }
 
         $credentials = $validator->valid();
@@ -129,10 +131,10 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
  
-            return redirect()->intended('/');
+            return redirect('/');
         }
  
-        return redirect('login')->withErrors([
+        return redirect('/login')->withErrors([
             'credentials' => 'The provided credentials do not match our records.',
         ])->onlyInput('username');
     }
@@ -142,6 +144,6 @@ class UserController extends Controller
         Auth::logout();
         $request->session()->regenerate();
 
-        return redirect()->intended('/');
+        return redirect('/');
     }
 }
