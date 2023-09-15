@@ -26,9 +26,13 @@ Route::controller(BugController::class)->group(function () {
 
 Route::controller(UserController::class)->group(function () {
     Route::middleware(['guest'])->group(function () {
-        Route::get('/login', 'enter');
-        Route::get('/signup', 'create');
-        Route::post('/login', 'login');
-        Route::post('/signup', 'store');
+        Route::get('/login', 'login');
+        Route::get('/signup', 'signup');
+        Route::post('/login', 'authenticate');
+        Route::post('/signup', 'create');
+    });
+
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/logout', 'unauthenticate');
     });
 });

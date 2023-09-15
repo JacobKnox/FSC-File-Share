@@ -24,6 +24,7 @@
                 <a class="{{$buttonClasses}}" href="#" style="{{$buttonStyles}}">Profile</a>
                 <a class="{{$buttonClasses}}" href="#" style="{{$buttonStyles}}">Settings</a>
                 <span class="navbar-text text-center d-md-none text-white">Welcome, {{ Auth::user()->username }}!</span>
+                <a href="/logout" class="btn btn-bg-danger d-md-none">Logout</a>
             {{-- If they're not, then show the appropriate option to log in --}}
             @else
                 {{-- Login button, hidden on screens medium or bigger --}}
@@ -33,6 +34,7 @@
         </ul>
         @auth
             <span class="navbar-text d-none d-md-flex text-white flex-fill justify-content-end">Welcome, {{ Auth::user()->username }}!</span>
+            <a href="/logout" class="btn btn-bg-danger">Logout</a>
         @else
             {{-- Login form, hidden on screens smaller than medium (when burger pops up) --}}
             <ul class="my-0">
@@ -43,8 +45,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">@</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-                        <input type="password" class="form-control" placeholder="Password" aria-label="Password">
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Password">
                         <button class="btn btn-success ml-md-2" type="submit">Login</button>
                     </div>
                 </form>

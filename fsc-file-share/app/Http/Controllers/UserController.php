@@ -21,7 +21,7 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function signup()
     {
         return view('signup');
     }
@@ -29,7 +29,7 @@ class UserController extends Controller
     /**
      * Show the form for logging in.
      */
-    public function enter()
+    public function login()
     {
         return view('login');
     }
@@ -37,7 +37,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'status' => 'required',
@@ -114,7 +114,7 @@ class UserController extends Controller
         //
     }
 
-    public function login(Request $request)
+    public function authenticate(Request $request)
     {
         $credentials = $request->validate([
             'username' => ['required', 'exists:users,username'],
@@ -130,5 +130,13 @@ class UserController extends Controller
         return back()->withErrors([
             'credentials' => 'The provided credentials do not match our records.',
         ])->onlyInput('username');
+    }
+
+    public function unauthenticate(Request $request)
+    {
+        Auth::logout();
+        $request->session()->regenerate();
+
+        return redirect()->intended('/');
     }
 }
