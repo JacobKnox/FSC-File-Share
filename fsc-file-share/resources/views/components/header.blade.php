@@ -1,8 +1,3 @@
-@php
-    $buttonStyles = "background-color: #0032A0; min-width: 80px;";
-    $buttonClasses = "nav-item nav-link mx-0 mx-md-1 my-1 my-md-0 btn-block text-center text-white border rounded-pill border-2 border-dark"
-@endphp
-
 <nav class="navbar sticky-top navbar-expand-md text-white mb-4 py-3 px-3" style="background-color:#BA0C2F;">
     <ul class="navbar-nav mx-auto">
         <div class="nav-item text-center">
@@ -17,19 +12,19 @@
     
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <ul class="navbar-nav mr-auto flex-fill">
-            <a class="{{$buttonClasses}}" href="/" style="{{$buttonStyles}}">Home</a>
-            <a class="{{$buttonClasses}}" href="#" style="{{$buttonStyles}}">Files</a>
+            <a class="{{ config('styles.buttonClasses') }}" href="/" style="{{ config('styles.buttonStyles') }}">Home</a>
+            <a class="{{ config('styles.buttonClasses') }}" href="#" style="{{ config('styles.buttonStyles') }}">Files</a>
             {{-- If the user is logged in (authenticated), then display appropriate links --}}
             @auth
-                <a class="{{$buttonClasses}}" href="#" style="{{$buttonStyles}}">Profile</a>
-                <a class="{{$buttonClasses}}" href="#" style="{{$buttonStyles}}">Settings</a>
+                <a class="{{ config('styles.buttonClasses') }}" href="#" style="{{ config('styles.buttonStyles') }}">Profile</a>
+                <a class="{{ config('styles.buttonClasses') }}" href="#" style="{{ config('styles.buttonStyles') }}">Settings</a>
                 <span class="navbar-text text-center d-md-none text-white">Welcome, {{ Auth::user()->username }}!</span>
                 <a href="/logout" class="btn btn-bg-danger d-md-none">Logout</a>
             {{-- If they're not, then show the appropriate option to log in --}}
             @else
                 {{-- Login button, hidden on screens medium or bigger --}}
-                <a class="{{$buttonClasses}} d-md-none" href="/login" style="{{$buttonStyles}}">Login</a>
-                <a class="{{$buttonClasses}} d-md-none" href="/signup" style="{{$buttonStyles}}">Sign Up</a>
+                <a class="{{ config('styles.buttonClasses') }} d-md-none" href="/login" style="{{ config('styles.buttonStyles') }}">Login</a>
+                <a class="{{ config('styles.buttonClasses') }} d-md-none" href="/signup" style="{{ config('styles.buttonStyles') }}">Sign Up</a>
             @endif
         </ul>
         @auth

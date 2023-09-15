@@ -58,8 +58,6 @@ class UserController extends Controller
 
         $validatedData = $validator->valid();
 
-        # dd($validatedData);
-
         User::create([
             'status' => $validatedData['status'],
             'name' => $validatedData['name'],
@@ -78,7 +76,7 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
  
-            return redirect()->intended('/');
+            return redirect('index');
         }
     }
 
@@ -116,10 +114,16 @@ class UserController extends Controller
 
     public function authenticate(Request $request)
     {
-        $credentials = $request->validate([
+        $validator = Validator::make($request->only('username', 'password'),[
             'username' => ['required', 'exists:users,username'],
             'password' => ['required'],
         ]);
+
+        if ($validator->fails()) {
+            return redirect('login')->withErrors($validator->errors());
+        }
+
+        $credentials = $validator->valid();
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -127,7 +131,7 @@ class UserController extends Controller
             return redirect()->intended('/');
         }
  
-        return back()->withErrors([
+        return redirect('login')->withErrors([
             'credentials' => 'The provided credentials do not match our records.',
         ])->onlyInput('username');
     }

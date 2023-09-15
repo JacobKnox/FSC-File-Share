@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <form method="POST" action="/bug" class="text-center col-10">
             @csrf
-            <div class="row justify-content-center mb-2 text-start">
+            <div class="{{ config('styles.formRow') }}">
                 <div class="col-8">
                     <label for="category" class="form-label"><x-asterisk></x-asterisk> Bug Category</label>
                     <select name="category" id="category" class="form-control">
@@ -17,7 +17,7 @@
                     @enderror
                 </div>   
             </div>
-            <div class="row justify-content-center mb-2 text-start">
+            <div class="{{ config('styles.formRow') }}">
                 <div class="col-8">
                     <label for="intended" class="form-label"><x-asterisk></x-asterisk> Intended Action</label>
                     <textarea name="intended" id="intended" class="form-control @error('intended') is-invalid @enderror" value="{{ old('intended') }}" placeholder="Enter what you were trying to do in as much detail as possible."></textarea>
@@ -26,7 +26,7 @@
                     @enderror
                 </div>   
             </div>
-            <div class="row justify-content-center mb-2 text-start">
+            <div class="{{ config('styles.formRow') }}">
                 <div class="col-8">
                     <label for="actual" class="form-label"><x-asterisk></x-asterisk> Actual Action</label>
                     <textarea name="actual" id="actual" class="form-control @error('actual') is-invalid @enderror" value="{{ old('actual') }}" placeholder="Enter what actually happened in as much detail as possible."></textarea>
@@ -35,7 +35,7 @@
                     @enderror
                 </div>  
             </div>
-            <div class="row justify-content-center mb-2 text-start">
+            <div class="{{ config('styles.formRow') }}">
                 <div class="col-8">
                     <label for="page" class="form-label"><x-asterisk></x-asterisk> Page</label>
                     <input type="text" name="page" id="page" class="form-control @error('page') is-invalid @enderror" value="{{ old('page') }}" placeholder="URL of page where bug happened">
@@ -44,7 +44,7 @@
                     @enderror
                 </div>  
             </div>
-            <div class="row justify-content-center mb-2 text-start">
+            <div class="{{ config('styles.formRow') }}">
                 <div class="col-8">
                     <label for="other" class="form-label">Other Comments</label>
                     <textarea name="other" id="other" class="form-control @error('other') is-invalid @enderror" value="{{ old('other') }}" placeholder="Please enter any other comments you think may be helpful. Be as detailed as possible."></textarea>
