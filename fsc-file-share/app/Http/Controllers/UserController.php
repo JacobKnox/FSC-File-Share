@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -36,18 +39,47 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'status' => 'required',
             'name' => 'required',
             'id' => 'required|min_digits:7|unique:users,sid',
             'username' => 'required|unique:users,username',
-            'email' => 'required|email|ends_with:flsouthern.edu|unique:users,semail',
-            'pemail' => 'sometimes|required|email|unique:users,pemail',
+            'email' => 'required|email|ends_with:flsouthern.edu|unique:users,email',
+            'pemail' => 'nullable|email|unique:users,pemail',
             'password' => 'required',
             'cpassword' => 'required|same:password',
             'terms' => 'accepted',
             'policy' => 'accepted',
         ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
+
+        $validatedData = $validator->valid();
+
+        # dd($validatedData);
+
+        User::create([
+            'status' => $validatedData['status'],
+            'name' => $validatedData['name'],
+            'sid' => intval($validatedData['id']),
+            'username' => $validatedData['username'],
+            'email' => $validatedData['email'],
+            'pemail' => array_key_exists('pemail', $validatedData) ? $validatedData['pemail'] : null,
+            'password' => Hash::make($validatedData['password']),
+        ]);
+
+        $credentials = [
+            'username' => $validatedData['username'],
+            'password' => $validatedData['password'],
+        ];
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+ 
+            return redirect()->intended('/');
+        }
     }
 
     /**
