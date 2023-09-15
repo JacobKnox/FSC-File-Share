@@ -88,7 +88,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        return view('profile', [
+        return view('user.profile', [
             'user' => User::findOrFail($id)
         ]);
     }
@@ -98,7 +98,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('user.edit', [
+            'user' => User::findOrFail($id)
+        ]);
     }
 
     /**
@@ -112,9 +114,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        User::findOrFail($id)->delete();
+        User::destroy($id);
  
         return redirect('/');
     }

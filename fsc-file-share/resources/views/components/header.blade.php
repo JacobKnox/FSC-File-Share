@@ -16,7 +16,7 @@
             <a class="{{ config('styles.buttonClasses') }}" href="#" style="{{ config('styles.buttonStyles') }}">Files</a>
             {{-- If the user is logged in (authenticated), then display appropriate links --}}
             @auth
-                <a class="{{ config('styles.buttonClasses') }}" href="#" style="{{ config('styles.buttonStyles') }}">Profile</a>
+                <a class="{{ config('styles.buttonClasses') }}" href="/user/{{Auth::user()->id}}" style="{{ config('styles.buttonStyles') }}">Profile</a>
                 <a class="{{ config('styles.buttonClasses') }}" href="#" style="{{ config('styles.buttonStyles') }}">Settings</a>
                 <span class="navbar-text text-center d-md-none text-white">Welcome, {{ Auth::user()->username }}!</span>
                 <a href="/logout" class="btn btn-bg-danger d-md-none">Logout</a>

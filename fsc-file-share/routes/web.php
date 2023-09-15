@@ -18,7 +18,7 @@ use App\Http\Controllers\EmailController;
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('home');
 
 Route::controller(BugController::class)->group(function () {
     Route::get('/bug', 'create');
@@ -27,19 +27,19 @@ Route::controller(BugController::class)->group(function () {
 
 Route::controller(UserController::class)->group(function () {
     Route::middleware(['guest'])->group(function () {
-        Route::get('/login', 'login');
-        Route::get('/signup', 'signup');
+        Route::get('/login', 'login')->name('login');
+        Route::get('/signup', 'signup')->name('signup');
         Route::post('/login', 'authenticate');
         Route::post('/signup', 'create');
     });
 
     Route::middleware(['auth', /*'verified'*/])->group(function () {
-        Route::get('/logout', 'unauthenticate');
-        Route::get('/user/{$id}', 'show');
+        Route::get('/logout', 'unauthenticate')->name('logout');
+        Route::get('/user/{id}', 'show');
         Route::middleware(['auth.user'])->group(function () {
-            Route::get('/user/{$id}/edit', 'edit');
-            Route::put('/user/{$id}', 'update');
-            Route::delete('/user/{$id}', 'destroy');
+            Route::put('/user/{id}', 'update');
+            Route::delete('/user/{id}', 'destroy');
+            Route::get('/user/{id}/edit', 'edit');
         });
     });
 });

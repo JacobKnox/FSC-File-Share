@@ -10,7 +10,7 @@
             <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Home</a></li>
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Files</a></li>
             @auth
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Profile</a></li>
+                <li class="nav-item mb-2"><a href="/user/{{Auth::user()->id}}" class="nav-link p-0 text-muted">Profile</a></li>
                 <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Settings</a></li>
             @else
                 <li class="nav-item mb-2"><a href="/login" class="nav-link p-0 text-muted">Login</a></li>
