@@ -88,7 +88,9 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('profile', [
+            'user' => User::findOrFail($id)
+        ]);
     }
 
     /**
@@ -112,7 +114,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        User::findOrFail($id)->delete();
+ 
+        return redirect('/');
     }
 
     public function authenticate(Request $request)

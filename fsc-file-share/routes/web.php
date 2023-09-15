@@ -35,6 +35,12 @@ Route::controller(UserController::class)->group(function () {
 
     Route::middleware(['auth', /*'verified'*/])->group(function () {
         Route::get('/logout', 'unauthenticate');
+        Route::get('/user/{$id}', 'show');
+        Route::middleware(['auth.user'])->group(function () {
+            Route::get('/user/{$id}/edit', 'edit');
+            Route::put('/user/{$id}', 'update');
+            Route::delete('/user/{$id}', 'destroy');
+        });
     });
 });
 
