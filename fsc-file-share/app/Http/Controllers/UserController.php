@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use App\Models\User;
 
 class UserController extends Controller
@@ -40,11 +41,11 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'status' => 'required',
+            'status' => ['required', Rule::in(['student', 'faculty'])],
             'name' => 'required',
             'id' => 'required|min_digits:7|unique:users,sid',
             'username' => 'required|unique:users,username',
-            'email' => 'required|email|ends_with:flsouthern.edu|unique:users,email',
+            'email' => 'required|email|ends_with:@flsouthern.edu,@mocs.flsouthern.edu|unique:users,email',
             'pemail' => 'nullable|email|unique:users,pemail',
             'password' => 'required',
             'cpassword' => 'required|same:password',
