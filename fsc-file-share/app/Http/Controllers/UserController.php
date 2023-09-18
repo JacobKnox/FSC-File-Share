@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use App\Models\User;
+use App\Http\Requests\UserCreateRequest;
 
 class UserController extends Controller
 {
@@ -38,36 +38,12 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function create(Request $request)
+    public function create(UserCreateRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'status' => ['required', Rule::in(['student', 'faculty'])],
-            'name' => 'required',
-            'id' => 'required|min_digits:7|unique:users,sid',
-            'username' => 'required|unique:users,username',
-            'email' => 'required|email|ends_with:@flsouthern.edu,@mocs.flsouthern.edu|unique:users,email',
-            'pemail' => 'nullable|email|unique:users,pemail',
-            'password' => 'required',
-            'cpassword' => 'required|same:password',
-            'terms' => 'accepted',
-            'policy' => 'accepted',
-        ]);
+        $validatedData = $request->validated();
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator->errors());
-        }
-
-        $validatedData = $validator->valid();
-
-        $user = User::create([
-            'status' => $validatedData['status'],
-            'name' => $validatedData['name'],
-            'sid' => intval($validatedData['id']),
-            'username' => $validatedData['username'],
-            'email' => $validatedData['email'],
-            'pemail' => array_key_exists('pemail', $validatedData) ? $validatedData['pemail'] : null,
-            'password' => Hash::make($validatedData['password']),
-        ]);
+        $user = User::create($validatedData);
+        $user->password = Hash::make($validatedData['password']);
 
         $credentials = [
             'username' => $validatedData['username'],

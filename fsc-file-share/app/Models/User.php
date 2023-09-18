@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable # implements MustVerifyEmail
 {
@@ -50,6 +51,14 @@ class User extends Authenticatable # implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'pemail_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class);
+    }
 }

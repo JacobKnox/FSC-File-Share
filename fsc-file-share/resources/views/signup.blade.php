@@ -26,9 +26,9 @@
             </div>
             <div class="{{ config('styles.formRow') }}">
                 <div class="col-8">
-                    <label for="id" class="form-label"><x-asterisk></x-asterisk> ID Number</label>
-                    <input type="text" name="id" id="id" class="form-control @error('id') is-invalid @enderror" value="{{ old('id') }}">
-                    @error('id')
+                    <label for="sid" class="form-label"><x-asterisk></x-asterisk> ID Number</label>
+                    <input type="text" name="sid" id="sid" class="form-control @error('sid') is-invalid @enderror" value="{{ old('sid') }}">
+                    @error('sid')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>  
