@@ -44,6 +44,12 @@ Route::controller(UserController::class)->group(function () {
     });
 });
 
+Route::controller(FileController::class)->group(function () {
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/file/create', 'create');
+    });
+});
+
 /*
 Route::controller(EmailController::class)->group(function () {
     Route::middleware(['auth'])->group(function () {
