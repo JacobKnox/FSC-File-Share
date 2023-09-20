@@ -17,10 +17,10 @@ return new class extends Migration
             $table->string('title', 1000);
             $table->string('description', 1000);
             $table->string('path', 1000);
-            $table->string('tags', 1000);
-            $table->boolean('comments');
-            $table->boolean('likes');
-            $table->boolean('downloads');
+            $table->string('tags', 1000)->nullable();
+            $table->boolean('comments')->default(0);
+            $table->boolean('likes')->default(0);
+            $table->boolean('downloads')->default(0);
             $table->timestamps();
         });
     }

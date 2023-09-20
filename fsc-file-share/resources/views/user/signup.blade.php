@@ -6,9 +6,9 @@
                 <div class="col-8">
                     <label for="status" class="form-label"><x-asterisk></x-asterisk> Status</label>
                     <select name="status" id="status" class="form-control">
-                        <option value="select" selected disabled>Select which you are:</option>
-                        <option value="student">Student</option>
-                        <option value="faculty">Faculty</option>
+                        <option value="select" {{ old('status') == null ? "selected" : "" }} disabled>Select which you are:</option>
+                        <option value="student" {{ old('status') == 'student' ? "selected" : "" }}>Student</option>
+                        <option value="faculty" {{ old('status') == 'faculty' ? "selected" : "" }}>Faculty</option>
                     </select>
                     @error('status')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -81,7 +81,7 @@
             <div class="{{ config('styles.formRow') }}">
                 <div class="col-8">
                     <x-asterisk></x-asterisk>
-                    <input type="checkbox" name="terms" id="terms">
+                    <input type="checkbox" name="terms" id="terms" {{ old('terms') != null ? 'checked' : '' }}>
                     <label for="terms" class="form-label"> I have read and agree to the <a href="#">Terms & Conditions</a>.</label>
                     @error('terms')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -91,7 +91,7 @@
             <div class="{{ config('styles.formRow') }}">
                 <div class="col-8">
                     <x-asterisk></x-asterisk>
-                    <input type="checkbox" name="policy" id="policy">
+                    <input type="checkbox" name="policy" id="policy" {{ old('policy') != null ? 'checked' : '' }}>
                     <label for="policy" class="form-label"> I have read and agree to the <a href="#">Privacy Policy</a>.</label>
                     @error('policy')
                         <div class="alert alert-danger">{{ $message }}</div>

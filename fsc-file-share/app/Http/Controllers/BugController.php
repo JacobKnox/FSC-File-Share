@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BugCreateRequest;
 use Illuminate\Http\Request;
 use GrahamCampbell\GitHub\Facades\GitHub;
 use Github\AuthMethod;
@@ -27,15 +28,9 @@ class BugController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BugCreateRequest $request)
     {
-        $validatedData = $request->validate([
-            'category' => 'required',
-            'intended' => 'required',
-            'actual' => 'required',
-            'page' => 'required|url',
-            'other' => 'nullable',
-        ]);
+        $validatedData = $request->validated();
 
         GitHub::authenticate(env('GITHUB_TOKEN'), env('GITHUB_PASSWORD'), AuthMethod::ACCESS_TOKEN);
         GitHub::issues()->create('JacobKnox', 'FSC-File-Share', array('title' => $validatedData['category'] . ': ' . substr($validatedData['actual'], 0, 60 - strlen($validatedData['category'])), 'body' => implode(PHP_EOL, $validatedData)));

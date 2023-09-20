@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserLoginRequest;
 
 class UserController extends Controller
 {
@@ -24,7 +24,7 @@ class UserController extends Controller
      */
     public function signup()
     {
-        return view('signup');
+        return view('user.signup');
     }
 
     /**
@@ -32,7 +32,7 @@ class UserController extends Controller
      */
     public function login()
     {
-        return view('login');
+        return view('user.login');
     }
 
     /**
@@ -64,9 +64,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        return view('user.profile', [
-            'user' => User::findOrFail($id)
-        ]);
+        return view('user.profile', ['user' => User::findOrFail($id)]);
     }
 
     /**
@@ -74,9 +72,7 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        return view('user.edit', [
-            'user' => User::findOrFail($id)
-        ]);
+        return view('user.edit', ['user' => User::findOrFail($id)]);
     }
 
     /**
@@ -93,29 +89,18 @@ class UserController extends Controller
     public function destroy(int $id)
     {
         User::destroy($id);
- 
         return redirect('/');
     }
 
-    public function authenticate(Request $request)
+    public function authenticate(UserLoginRequest $request)
     {
-        $validator = Validator::make($request->only('username', 'password'),[
-            'username' => ['required', 'exists:users,username'],
-            'password' => ['required'],
-        ]);
-
-        if ($validator->fails()) {
-            return redirect('/login')->withErrors($validator->errors());
-        }
-
-        $credentials = $validator->valid();
+        $credentials = $request->validated();
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
- 
             return redirect('/');
         }
- 
+
         return redirect('/login')->withErrors([
             'credentials' => 'The provided credentials do not match our records.',
         ])->onlyInput('username');
@@ -125,7 +110,6 @@ class UserController extends Controller
     {
         Auth::logout();
         $request->session()->regenerate();
-
         return redirect('/');
     }
 }

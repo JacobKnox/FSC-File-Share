@@ -6,11 +6,11 @@
                 <div class="col-8">
                     <label for="category" class="form-label"><x-asterisk></x-asterisk> Bug Category</label>
                     <select name="category" id="category" class="form-control">
-                        <option value="select" selected disabled>Select a category:</option>
-                        <option value="text-error">Misspelling/Grammer</option>
-                        <option value="visual">Visual/Image</option>
-                        <option value="security">Security Vulnerability</option>
-                        <option value="other">Other</option>
+                        <option value="select" {{ old('category') == null ? "selected" : "" }} disabled>Select a category:</option>
+                        <option value="text-error" {{ old('category') == 'text-error' ? "selected" : "" }}>Misspelling/Grammer</option>
+                        <option value="visual" {{ old('category') == 'visual' ? "selected" : "" }}>Visual/Image</option>
+                        <option value="security" {{ old('category') == 'security' ? "selected" : "" }}>Security Vulnerability</option>
+                        <option value="other" {{ old('category') == 'other' ? "selected" : "" }}>Other</option>
                     </select>
                     @error('category')
                         <div class="alert alert-danger">{{ $message }}</div>
