@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\BugController;
 use App\Http\Controllers\EmailController;
 
@@ -47,6 +48,7 @@ Route::controller(UserController::class)->group(function () {
 Route::controller(FileController::class)->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('/file/create', 'create');
+        Route::post('/file/create', 'store');
     });
 });
 

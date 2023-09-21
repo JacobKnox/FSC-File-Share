@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FileCreateRequest;
 use Illuminate\Http\Request;
+use App\Models\File;
 
 class FileController extends Controller
 {
@@ -25,9 +27,19 @@ class FileController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(FileCreateRequest $request)
     {
-        //
+        $validatedData = $request->validated();
+
+        $file = File::create([
+            'user_id' => $request->user()->id,
+            'title' => $validatedData['title'],
+            'description' => $validatedData['description'],
+            'path' => $validatedData['file'],
+        ]);
+        $file->store($request->file('file'), $request->file('file')->hashName(), 'local');
+
+        return redirect('/');
     }
 
     /**
