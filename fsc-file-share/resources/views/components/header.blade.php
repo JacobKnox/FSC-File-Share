@@ -15,7 +15,7 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <ul class="navbar-nav mr-auto flex-fill">
             <a class="{{ config('styles.buttonClasses') }}" href="/" style="{{ config('styles.buttonStyles') }}">Home</a>
-            <a class="{{ config('styles.buttonClasses') }}" href="#" style="{{ config('styles.buttonStyles') }}">Files</a>
+            <a class="{{ config('styles.buttonClasses') }}" href="/files" style="{{ config('styles.buttonStyles') }}">Files</a>
             {{-- If the user is logged in (authenticated), then display appropriate links --}}
             @auth
                 <a class="{{ config('styles.buttonClasses') }}" href="/user/{{$user->id}}" style="{{ config('styles.buttonStyles') }}">Profile</a>

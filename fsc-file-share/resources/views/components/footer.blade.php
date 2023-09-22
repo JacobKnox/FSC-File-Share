@@ -10,7 +10,7 @@
         <h5>Site Map</h5>
         <ul class="nav flex-column">
             <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Home</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Files</a></li>
+            <li class="nav-item mb-2"><a href="/files" class="nav-link p-0 text-muted">Files</a></li>
             @auth
                 <li class="nav-item mb-2"><a href="/user/{{$user->id}}" class="nav-link p-0 text-muted">Profile</a></li>
                 <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Settings</a></li>

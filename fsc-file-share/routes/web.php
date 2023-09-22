@@ -36,19 +36,20 @@ Route::controller(UserController::class)->group(function () {
 
     Route::middleware(['auth', /*'verified'*/])->group(function () {
         Route::get('/logout', 'unauthenticate')->name('logout');
-        Route::get('/user/{id}', 'show');
+        Route::get('/users/{id}', 'show');
         Route::middleware(['auth.user'])->group(function () {
-            Route::put('/user/{id}', 'update');
-            Route::delete('/user/{id}', 'destroy');
-            Route::get('/user/{id}/edit', 'edit');
+            Route::put('/users/{id}', 'update');
+            Route::delete('/users/{id}', 'destroy');
+            Route::get('/users/{id}/edit', 'edit');
         });
     });
 });
 
 Route::controller(FileController::class)->group(function () {
+    Route::get('/files', 'index');
     Route::middleware(['auth'])->group(function () {
-        Route::get('/file/create', 'create');
-        Route::post('/file/create', 'store');
+        Route::get('/files/create', 'create');
+        Route::post('/files/create', 'store');
     });
 });
 

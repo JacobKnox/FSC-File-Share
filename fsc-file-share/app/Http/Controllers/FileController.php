@@ -13,7 +13,7 @@ class FileController extends Controller
      */
     public function index()
     {
-        //
+        return view('file.index', ['files' => File::all()]);
     }
 
     /**
@@ -36,6 +36,10 @@ class FileController extends Controller
             'title' => $validatedData['title'],
             'description' => $validatedData['description'],
             'path' => $validatedData['file'],
+            'comments' => isset($validatedData['comments']) ? 1 : 0,
+            'likes' => isset($validatedData['likes']) ? 1 : 0,
+            'downloads' => isset($validatedData['downloads']) ? 1 : 0,
+            'tags' => json_encode($validatedData['tags'])
         ]);
         $file->store($request->file('file'), $request->file('file')->hashName(), 'local');
 

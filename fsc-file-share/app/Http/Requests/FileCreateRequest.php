@@ -26,10 +26,10 @@ class FileCreateRequest extends FormRequest
             'title' => 'required|string|unique:files,title',
             'description' => 'required|string',
             'file' => 'required',
-            'downloads' => 'nullable|boolean',
-            'comments' => 'nullable|boolean',
-            'likes' => 'nullable|boolean',
-            'tags' => 'nullable',
+            'downloads' => 'nullable',
+            'comments' => 'nullable',
+            'likes' => 'nullable',
+            'tags' => 'nullable|array',
             'plagiarism' => 'required|accepted',
         ];
     }

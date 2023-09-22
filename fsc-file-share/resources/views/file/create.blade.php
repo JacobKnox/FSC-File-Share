@@ -1,6 +1,6 @@
 <x-template pageName="File Upload">
     <div class="row justify-content-center">
-        <form method="POST" action='/file/create' class="text-center col-10" enctype="multipart/form-data">
+        <form method="POST" action='/files/create' class="text-center col-10" enctype="multipart/form-data">
             @csrf
             <x-formrow>
                 <label for="title" class="form-label"><x-asterisk></x-asterisk> Title</label>
@@ -45,9 +45,11 @@
                 @enderror
             </x-formrow>
             <x-formrow>
-                <label for="tags" class="form-label">Tags</label>
-                <select name="tags" id="tags" class="form-control" multiple>
-
+                <label for="tags[]" class="form-label">Tags</label>
+                <select name="tags[]" id="tags" class="form-control" multiple>
+                    @foreach(config('misc.tags') as $tag)
+                        <option value="{{$tag}}" @if(old('tags') != null && in_array($tag, old('tags'))) selected @endif>{{ucwords($tag)}}</option>
+                    @endforeach
                 </select>
             </x-formrow>
             <x-formrow>
