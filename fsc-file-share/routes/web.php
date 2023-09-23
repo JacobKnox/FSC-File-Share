@@ -51,6 +51,8 @@ Route::controller(FileController::class)->group(function () {
         Route::get('/files/create', 'create');
         Route::post('/files/create', 'store');
     });
+    Route::get('/files/{id}', 'show');
+    Route::get('/files/{id}/preview', 'preview');
 });
 
 /*

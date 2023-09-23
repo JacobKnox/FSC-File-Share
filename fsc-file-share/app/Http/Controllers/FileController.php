@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FileCreateRequest;
 use Illuminate\Http\Request;
 use App\Models\File;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -35,13 +36,12 @@ class FileController extends Controller
             'user_id' => $request->user()->id,
             'title' => $validatedData['title'],
             'description' => $validatedData['description'],
-            'path' => $validatedData['file'],
+            'path' => $request->file('file')->store('public\uploads'),
             'comments' => isset($validatedData['comments']) ? 1 : 0,
             'likes' => isset($validatedData['likes']) ? 1 : 0,
             'downloads' => isset($validatedData['downloads']) ? 1 : 0,
             'tags' => json_encode($validatedData['tags'])
         ]);
-        $file->store($request->file('file'), $request->file('file')->hashName(), 'local');
 
         return redirect('/');
     }
@@ -51,7 +51,15 @@ class FileController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('file.show', ['file' => File::findOrFail($id)]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function preview(string $id)
+    {
+        return response()->file(Storage::path(File::findOrFail($id)->path));
     }
 
     /**
