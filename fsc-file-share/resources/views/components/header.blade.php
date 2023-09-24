@@ -31,7 +31,7 @@
         </ul>
         @auth
             <span class="navbar-text d-none d-md-flex text-white flex-fill justify-content-end">Welcome, {{ $user->username }}!</span>
-            <a href="/logout" class="btn btn-bg-danger">Logout</a>
+            <a href="/logout" class="d-none d-md-flex btn btn-bg-danger">Logout</a>
         @else
             {{-- Login form, hidden on screens smaller than medium (when burger pops up) --}}
             <ul class="my-0">
