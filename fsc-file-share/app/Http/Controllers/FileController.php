@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FileCreateRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\FileUpdateRequest;
 use App\Models\File;
-use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -30,20 +29,7 @@ class FileController extends Controller
      */
     public function store(FileCreateRequest $request)
     {
-        $validatedData = $request->validated();
-
-        $file = File::create([
-            'user_id' => $request->user()->id,
-            'title' => $validatedData['title'],
-            'description' => $validatedData['description'],
-            'path' => $request->file('file')->store('public\uploads'),
-            'comments' => isset($validatedData['comments']) ? 1 : 0,
-            'likes' => isset($validatedData['likes']) ? 1 : 0,
-            'downloads' => isset($validatedData['downloads']) ? 1 : 0,
-            'tags' => json_encode($validatedData['tags'])
-        ]);
-
-        return redirect('/');
+        return redirect('/files/' . File::createFromInput($request, $request->validated())->id);
     }
 
     /**
@@ -59,23 +45,16 @@ class FileController extends Controller
      */
     public function preview(string $id)
     {
-        return response()->file(Storage::path(File::findOrFail($id)->path));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return File::findOrFail($id)->access();
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(FileUpdateRequest $request, string $id)
     {
-        //
+        File::findOrFail($id)->update($request->validated());
+        return redirect('/files/' . $id);
     }
 
     /**
@@ -83,6 +62,7 @@ class FileController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        File::destroy($id);
+        return redirect('/files');
     }
 }

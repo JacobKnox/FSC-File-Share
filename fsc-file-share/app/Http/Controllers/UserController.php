@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserLoginRequest;
+use App\Http\Requests\UserUpdateRequest;
 
 class UserController extends Controller
 {
@@ -16,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return view('user.index', ['users' => User::all()]);
     }
 
     /**
@@ -78,9 +79,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserUpdateRequest $request, string $id)
     {
-        //
+        dd(last($request->segments()) == $request->user()->id);
+        User::findOrFail($id)->update($request->validated());
+        return redirect('/users/' . $id);
     }
 
     /**

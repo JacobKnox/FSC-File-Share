@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\UploadedFile;
 
 class File extends Model
 {
@@ -49,16 +48,30 @@ class File extends Model
 
     public function access()
     {
-        return response()->file($this->path);
+        return response()->file(Storage::path($this->path));
     }
 
     public function download()
     {
-        return $this->downloads ? response()->download($this->path) : back();
+        return $this->downloads ? response()->download(Storage::path($this->path)) : back();
     }
 
-    public function store(UploadedFile $file, string $path, string $disk)
+    public function tags()
     {
-        $file->store($path, $disk);
+        return json_decode($this->tags);
+    }
+
+    public static function createFromInput($request, $input)
+    {
+        return File::create([
+            'user_id' => $request->user()->id,
+            'title' => $input['title'],
+            'description' => $input['description'],
+            'path' => $request->file('file')->storeAs('public\uploads', $request->file('file')->getClientOriginalName()),
+            'comments' => isset($input['comments']) ? 1 : 0,
+            'likes' => isset($input['likes']) ? 1 : 0,
+            'downloads' => isset($input['downloads']) ? 1 : 0,
+            'tags' => json_encode($input['tags'])
+        ]);
     }
 }
