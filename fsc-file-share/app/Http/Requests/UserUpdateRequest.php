@@ -11,7 +11,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return last($this->segments()) == $this->user()->id;
+        return (last($this->segments()) == $this->user()->id) && config('requests.userupdate');
     }
 
     /**
@@ -22,7 +22,7 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string',
         ];
     }
 }

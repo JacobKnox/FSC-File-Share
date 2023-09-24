@@ -12,7 +12,7 @@ class FileUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return File::findOrFail(last($this->segments()))->user_id == $this->user()->id;
+        return File::findOrFail(last($this->segments()))->user_id == $this->user()->id && config('requests.fileupdate');
     }
 
     /**

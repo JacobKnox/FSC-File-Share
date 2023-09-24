@@ -11,7 +11,7 @@ class UserLoginRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return true && config('requests.userlogin');
     }
 
     /**

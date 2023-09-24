@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable # implements MustVerifyEmail
 {
@@ -56,5 +58,18 @@ class User extends Authenticatable # implements MustVerifyEmail
     public function files(): HasMany
     {
         return $this->hasMany(File::class);
+    }
+
+    public static function createFromInput($input)
+    {
+        $user = User::create($input);
+        $user->password = Hash::make($input['password']);
+
+        $credentials = [
+            'username' => $input['username'],
+            'password' => $input['password'],
+        ];
+
+        return Auth::attempt($credentials);
     }
 }

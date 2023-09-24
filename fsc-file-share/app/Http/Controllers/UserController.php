@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserLoginRequest;
@@ -41,17 +40,7 @@ class UserController extends Controller
      */
     public function create(UserCreateRequest $request)
     {
-        $validatedData = $request->validated();
-
-        $user = User::create($validatedData);
-        $user->password = Hash::make($validatedData['password']);
-
-        $credentials = [
-            'username' => $validatedData['username'],
-            'password' => $validatedData['password'],
-        ];
-
-        if (Auth::attempt($credentials)) {
+        if (User::createFromInput($request->validated())) {
             $request->session()->regenerate();
             # $user->sendEmailVerificationNotification();
             # return redirect('/email/verify');
@@ -81,7 +70,6 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, string $id)
     {
-        dd(last($request->segments()) == $request->user()->id);
         User::findOrFail($id)->update($request->validated());
         return redirect('/users/' . $id);
     }
@@ -97,9 +85,7 @@ class UserController extends Controller
 
     public function authenticate(UserLoginRequest $request)
     {
-        $credentials = $request->validated();
-
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($request->validated())) {
             $request->session()->regenerate();
             return redirect('/');
         }

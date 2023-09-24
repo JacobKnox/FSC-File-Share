@@ -12,7 +12,7 @@ class FileCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return Auth::check() && config('requests.filecreate');
     }
 
     /**
