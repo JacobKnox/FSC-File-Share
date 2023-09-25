@@ -54,16 +54,20 @@ class File extends Model
 
     public function addLike(string $user_id)
     {
-        Like::create(['file_id' => $this->id, 'user_id' => $user_id]);
-        $this->count_likes += 1;
-        $this->save();
+        if ($this->likes) {
+            Like::create(['file_id' => $this->id, 'user_id' => $user_id]);
+            $this->count_likes += 1;
+            $this->save();
+        }
     }
 
     public function removeLike(string $user_id)
     {
-        Like::where(['file_id' => $this->id, 'user_id' => $user_id])->delete();
-        $this->count_likes -= 1;
-        $this->save();
+        if ($this->likes) {
+            Like::where(['file_id' => $this->id, 'user_id' => $user_id])->delete();
+            $this->count_likes -= 1;
+            $this->save();
+        }
     }
 
     public function access()
