@@ -60,10 +60,21 @@ class User extends Authenticatable # implements MustVerifyEmail
         return $this->hasMany(File::class);
     }
 
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function checkLike(string $file_id)
+    {
+        return $this->likes->where('file_id', $file_id)->isNotEmpty();
+    }
+
     public static function createFromInput($input)
     {
         $user = User::create($input);
         $user->password = Hash::make($input['password']);
+        $user->save();
 
         $credentials = [
             'username' => $input['username'],

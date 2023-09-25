@@ -45,8 +45,10 @@ class UserController extends Controller
             # $user->sendEmailVerificationNotification();
             # return redirect('/email/verify');
 
-            return redirect('/');
+
         }
+
+        return redirect('/');
     }
 
     /**

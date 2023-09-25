@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FileCreateRequest;
 use App\Http\Requests\FileUpdateRequest;
 use App\Models\File;
+use Illuminate\Support\Facades\Auth;
 
 class FileController extends Controller
 {
@@ -37,15 +38,32 @@ class FileController extends Controller
      */
     public function show(string $id)
     {
-        return view('file.show', ['file' => File::findOrFail($id)]);
+        return view('file.show', ['file' => File::findOrFail($id), 'user' => Auth::user()]);
     }
 
     /**
-     * Display the specified resource.
+     * Display the file.
      */
     public function preview(string $id)
     {
         return File::findOrFail($id)->access();
+    }
+
+    public function download(string $id)
+    {
+        return File::findOrFail($id)->download();
+    }
+
+    public function like(string $id, string $user)
+    {
+        File::findOrFail($id)->addLike($user);
+        return back();
+    }
+
+    public function unlike(string $id, string $user)
+    {
+        File::findOrFail($id)->removeLike($user);
+        return back();
     }
 
     /**

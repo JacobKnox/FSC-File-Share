@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 class File extends Model
@@ -44,6 +45,25 @@ class File extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getLikes(): HasMany
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function addLike(string $user_id)
+    {
+        Like::create(['file_id' => $this->id, 'user_id' => $user_id]);
+        $this->count_likes += 1;
+        $this->save();
+    }
+
+    public function removeLike(string $user_id)
+    {
+        Like::where(['file_id' => $this->id, 'user_id' => $user_id])->delete();
+        $this->count_likes -= 1;
+        $this->save();
     }
 
     public function access()
