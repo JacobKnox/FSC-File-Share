@@ -32,10 +32,12 @@
                         </div>
                         <div class="col">
                             @if($file->comments && $user != null)
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-chat-left-text text-primary my-4" viewBox="0 0 16 16">
-                                    <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                                    <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-                                </svg>
+                                <button class="btn py-0 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#commentForm" aria-controls="commentForm" aria-expanded="false" aria-label="Toggle comment form">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-chat-left-text text-primary my-4" viewBox="0 0 16 16">
+                                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                        <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                                    </svg>
+                                </button>
                             @else
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-chat-left-text text-muted my-4" viewBox="0 0 16 16">
                                     <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
@@ -58,6 +60,33 @@
                                 </svg>
                             @endif
                         </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="border-top border-black border-2 pt-2">
+                        <div class="collapse" id="commentForm">
+                            <form action="/files/{{$file->id}}/comment/id={{$user->id}}" method="POST">
+                                <x-formrow>
+                                    <x-asterisk></x-asterisk>
+                                    <textarea name="content" id="content" class="form-control" cols="55" rows="5"></textarea>
+                                </x-formrow>
+                                <button type="submit" class="btn btn-success">Comment</button>
+                            </form>
+                        </div>
+                        @if($file->getComments->isEmpty())
+                            @if($file->comments)
+                                <p>Looks like there aren't any comments right now!</p>
+                            @else
+                                <p class="text-muted pt-2">Comments are turned off for this file.</p>
+                            @endif
+                        @else
+                            <div class="row row-cols-1 text-start">
+                                @foreach($file->getComments as $comment)
+                                    <a href="/users/{{$comment->user->id}}">{{$comment->user->name}}</a>
+                                    <p>{{$comment->content}}</p>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

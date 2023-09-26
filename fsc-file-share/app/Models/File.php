@@ -52,6 +52,11 @@ class File extends Model
         return $this->hasMany(Like::class);
     }
 
+    public function getComments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function addLike(string $user_id)
     {
         if ($this->likes) {

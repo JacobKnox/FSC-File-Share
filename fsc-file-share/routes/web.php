@@ -50,12 +50,12 @@ Route::controller(FileController::class)->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('/files/create', 'create');
         Route::post('/files/create', 'store');
+        Route::get('/files/{id}/like/id={user}', 'like');
+        Route::get('/files/{id}/unlike/id={user}', 'unlike');
+        Route::get('/files/{id}/download', 'download');
     });
     Route::get('/files/{id}', 'show');
-    Route::get('/files/{id}/like/id={user}', 'like');
-    Route::get('/files/{id}/unlike/id={user}', 'unlike');
     Route::get('/files/{id}/preview', 'preview');
-    Route::get('/files/{id}/download', 'download');
 });
 
 /*
