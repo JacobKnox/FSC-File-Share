@@ -7,4 +7,5 @@ return [
     'usercreate' => env('allforms', true) && true,
     'userlogin' => env('allforms', true) && true,
     'userupdate' => env('allforms', true) && true,
+    'commentcreate' => env('allforms', true) && true,
 ];

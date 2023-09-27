@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Requests\CommentCreateRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,6 +56,13 @@ class File extends Model
     public function getComments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function addComment(string $user_id, $validatedData)
+    {
+        if ($this->comments) {
+            Comment::create(['file_id' => $this->id, 'user_id' => $user_id, 'content' => $validatedData['content']]);
+        }
     }
 
     public function addLike(string $user_id)
