@@ -54,6 +54,7 @@ Route::controller(FileController::class)->group(function () {
         Route::get('/files/{id}/unlike/id={user}', 'unlike');
         Route::get('/files/{id}/download', 'download');
         Route::post('/files/{id}/comment/id={user}', 'comment');
+        Route::delete('/files/{id}/delete', 'destroy');
     });
     Route::get('/files/{id}', 'show');
     Route::get('/files/{id}/preview', 'preview');
