@@ -6,6 +6,7 @@ use App\Http\Requests\CommentCreateRequest;
 use App\Http\Requests\FileCreateRequest;
 use App\Http\Requests\FileUpdateRequest;
 use App\Models\File;
+use App\Models\Like;
 use Illuminate\Support\Facades\Auth;
 
 class FileController extends Controller
@@ -78,7 +79,15 @@ class FileController extends Controller
      */
     public function update(FileUpdateRequest $request, string $id)
     {
-        File::findOrFail($id)->update($request->validated());
+        $data = $request->validated();
+        File::findOrFail($id)->update([
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'comments' => isset($data['comments']) ? 1 : 0,
+            'likes' => isset($data['likes']) ? 1 : 0,
+            'downloads' => isset($data['downloads']) ? 1 : 0,
+            'tags' => json_encode($data['tags']),
+        ]);
         return redirect('/files/' . $id);
     }
 
@@ -87,6 +96,7 @@ class FileController extends Controller
      */
     public function destroy(string $id)
     {
+        Like::destroy(Like::select('id')->where('file_id', $id)->get());
         File::destroy($id);
         return redirect('/files');
     }

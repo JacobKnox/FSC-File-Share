@@ -62,9 +62,11 @@
                         </div>
                         @if($user != null && $user->id == $file->user->id)
                             <div class="col">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pencil mt-4 mt-sm-0 mb-4 text-success" viewBox="0 0 16 16">
-                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-                                </svg>
+                                <button type="button" class="btn p-0 mt-4 mt-sm-0 mb-4" data-bs-toggle="modal" data-bs-target="#updateModal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pencil text-success" viewBox="0 0 16 16">
+                                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                    </svg>
+                                </button>
                             </div>
                             <div class="col">
                                 <button type="button" class="btn p-0 mb-4" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -121,12 +123,60 @@
     </div>
 </x-template>
 
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <form action="/files/{{$file->id}}" method="POST">
+        @method("PUT")
+        @csrf
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Update File</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <x-formrow>
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" name="title" id="title" class="form-control @error('title') is-invalid @enderror" value="{{ $file->title }}">
+                </x-formrow>
+                <x-formrow>
+                    <label for="description" class="form-label">Description</label>
+                    <textarea name="description" id="description" cols="30" rows="10" class="form-control @error('description') is-invalid @enderror">{{ $file->description }}</textarea>
+                </x-formrow>
+                <x-formrow>
+                    <input type="checkbox" name="downloads" id="downloads" {{ $file->downloads == 1 ? 'checked' : '' }}>
+                    <label for="downloads" class="form-label">Allow file downloads.</label>
+                </x-formrow>
+                <x-formrow>
+                    <input type="checkbox" name="comments" id="comments" {{ $file->comments == 1 ? 'checked' : '' }}>
+                    <label for="comments" class="form-label">Allow file comments.</label>
+                </x-formrow>
+                <x-formrow>
+                    <input type="checkbox" name="likes" id="likes" {{ $file->likes == 1 ? 'checked' : '' }}>
+                    <label for="likes" class="form-label">Allow file likes.</label>
+                </x-formrow>
+                <x-formrow>
+                    <label for="tags[]" class="form-label">Tags</label>
+                    <select name="tags[]" id="tags" class="form-control" multiple>
+                        @foreach(config('misc.tags') as $tag)
+                            <option value="{{$tag}}" @if($file->tags() != null && in_array($tag, $file->tags())) selected @endif>{{ucwords($tag)}}</option>
+                        @endforeach
+                    </select>
+                </x-formrow>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success">Update</button>
+            </div>
+        </div>
+        </div>
+    </form>
+</div>
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Confirm File Delete</h5>
+          <h5 class="modal-title" id="deleteModalLabel">Confirm File Delete</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -134,7 +184,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <form action="/files/{{$file->id}}/delete" method="POST">
+          <form action="/files/{{$file->id}}" method="POST">
             @method("DELETE")
             @csrf
             <button type="submit" class="btn btn-danger">Delete</button>

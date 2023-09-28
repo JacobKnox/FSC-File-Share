@@ -23,8 +23,8 @@ class FileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'nullable|string|unique:files,title',
-            'description' => 'nullable|string',
+            'title' => 'required|string' . (File::findOrFail(last($this->segments()))->title != $this->title ? '|unique:files,title' : ''),
+            'description' => 'required|string',
             'downloads' => 'nullable',
             'comments' => 'nullable',
             'likes' => 'nullable',
