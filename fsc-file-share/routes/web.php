@@ -56,6 +56,8 @@ Route::controller(FileController::class)->group(function () {
         Route::get('/files/{id}/download', 'download');
         # Create comment controller?
         Route::post('/files/{id}/comment/id={user}', 'comment');
+        Route::put('/files/{id}/comment/id={comment}', 'updateComment');
+        Route::delete('/files/{id}/comment/id={comment}', 'deleteComment');
         Route::delete('/files/{id}', 'destroy'); # Need to add middleware here
         Route::put('/files/{id}', 'update'); # Need to add middleware here
     });

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CommentCreateRequest;
+use App\Http\Requests\CommentDeleteRequest;
 use App\Http\Requests\FileCreateRequest;
 use App\Http\Requests\FileUpdateRequest;
 use App\Models\File;
 use App\Models\Like;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 
 class FileController extends Controller
@@ -74,6 +76,18 @@ class FileController extends Controller
         return back();
     }
 
+    public function updateComment(string $id, string $comment, CommentCreateRequest $request)
+    {
+        Comment::findOrFail($comment)->update($request->validated());
+        return back();
+    }
+
+    public function deleteComment(string $id, string $comment, CommentDeleteRequest $request)
+    {
+        Comment::destroy($comment);
+        return back();
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -97,6 +111,7 @@ class FileController extends Controller
     public function destroy(string $id)
     {
         Like::destroy(Like::select('id')->where('file_id', $id)->get());
+        Comment::destroy(Comment::select('id')->where('file_id', $id)->get());
         File::destroy($id);
         return redirect('/files');
     }

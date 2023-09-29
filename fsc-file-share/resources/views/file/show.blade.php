@@ -5,8 +5,10 @@
                 <a href="/files/{{$file->id}}/preview">Preview</a>
             </div>
             <div class="col text-center">
-                <p class="h2">{{$file->title}}</p>
-                <p>{{$file->description}}</p>
+                <p class="my-1 fs-4 fw-bold">{{$file->title}}</p>
+                <p class="my-1 fs-6 text-muted text-capitalize">{{implode(', ', $file->tags())}}</p>
+                <p class="my-1 fs-6">Uploaded by <a href="/users/{{$file->user->id}}" class="text-decoration-none link-primary">{{$file->user->name}}</a></p>
+                <p class="my-1 fs-6">{{$file->description}}</p>
                 <div class="container">
                     <div class="row row-cols-2 row-cols-sm-3 justify-content-center">
                         <div class="col">
@@ -81,19 +83,21 @@
                 </div>
                 <div class="container">
                     <div class="border-top border-black border-2 pt-2">
-                        <div class="collapse" id="commentForm">
-                            <form action="/files/{{$file->id}}/comment/id={{$user->id}}" method="POST">
-                                @csrf
-                                <x-formrow>
-                                    <x-asterisk></x-asterisk>
-                                    <textarea name="content" id="content" class="form-control" cols="55" rows="5"></textarea>
-                                </x-formrow>
-                                <button type="submit" class="btn btn-success">Comment</button>
-                            </form>
-                        </div>
+                        @if($user != null)
+                            <div class="collapse" id="commentForm">
+                                <form action="/files/{{$file->id}}/comment/id={{$user->id}}" method="POST">
+                                    @csrf
+                                    <x-formrow col='12'>
+                                        <x-asterisk></x-asterisk>
+                                        <textarea name="content" id="content" class="form-control" cols="55" rows="5"></textarea>
+                                    </x-formrow>
+                                    <button type="submit" class="btn btn-success">Comment</button>
+                                </form>
+                            </div>
+                        @endif
                         @if($file->getComments->isEmpty())
                             @if($file->comments)
-                                <p>Looks like there aren't any comments right now!</p>
+                                <p class="pt-2">Looks like there aren't any comments right now.<br>Be the first to comment on this file.</p>
                             @else
                                 <p class="text-muted pt-2">Comments are turned off for this file.</p>
                             @endif
@@ -105,14 +109,56 @@
                                             <div class="col">
                                                 <a href="/users/{{$comment->user->id}}">{{$comment->user->name}}</a>
                                             </div>
-                                            <div class="col text-end">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                                                </svg>
-                                            </div>
+                                            @if($user != null && $user->id == Auth::user()->id)
+                                                <div class="col text-end">
+                                                    <button class="btn py-0 px-0" id="commentUpdate{{$comment->id}}Btn" type="button" data-bs-toggle="collapse" data-bs-target="#commentUpdateForm" aria-controls="commentUpdateForm" aria-expanded="false" aria-label="Toggle comment update form">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            @endif
                                         </div>
-                                        <p>{{$comment->content}}</p>
+                                        @if($user != null && $user->id == Auth::user()->id)
+                                            <div class="collapse container" id="commentUpdateForm">
+                                                <div class="row align-items-end">
+                                                    <div class="col px-0">
+                                                        <form action="/files/{{$file->id}}/comment/id={{$comment->id}}" method="POST">
+                                                            @csrf
+                                                            @method("PUT")
+                                                            <x-formrow align='start' col='12'>
+                                                                <x-asterisk></x-asterisk>
+                                                                <textarea name="content" id="content" class="form-control" cols="55" rows="5">{{$comment->content}}</textarea>
+                                                            </x-formrow>
+                                                            <button type="submit" class="btn btn-success">Update</button>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col-3 px-0 text-end">
+                                                        <form action="/files/{{$file->id}}/comment/id={{$comment->id}}" method="POST">
+                                                            @method("DELETE")
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <p id="comment{{$comment->id}}" class='d-block'>{{$comment->content}}</p>
                                     </div>
+                                    <script>
+                                        var content = document.getElementById('comment' + {!! $comment->id !!});
+                                        var btn = document.getElementById('commentUpdate' + {!! $comment->id !!} + 'Btn');
+                                        btn.addEventListener("click", function () {
+                                            if(content.classList.contains('d-block')) {
+                                                content.classList.remove('d-block');
+                                                content.classList.add('d-none');
+                                            }
+                                            else{
+                                                content.classList.remove('d-none');
+                                                content.classList.add('d-block');
+                                            }
+                                        });
+                                    </script>
                                 @endforeach
                             </div>
                         @endif

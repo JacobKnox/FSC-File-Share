@@ -6,7 +6,7 @@
                     <div class="card" style="width: 18rem;">
                         <div class="card-body">
                             <h5 class="card-title text-center"><a href="/files/{{$file->id}}" class="card-link">{{$file->title}}</a></h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{implode(', ', $file->tags())}}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted text-capitalize">{{implode(', ', $file->tags())}}</h6>
                             <p class="card-text">{{$file->description}}</p>
                             <p class="card-text">Uploaded by <a href="/users/{{$file->user->id}}" class="card-link">{{$file->user->name}}</a></p>
                         </div>
