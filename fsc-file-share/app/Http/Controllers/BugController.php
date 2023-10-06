@@ -32,7 +32,6 @@ class BugController extends Controller
     {
         $validatedData = $request->validated();
 
-        GitHub::authenticate(env('GITHUB_TOKEN'), env('GITHUB_PASSWORD'), AuthMethod::ACCESS_TOKEN);
         GitHub::issues()->create('JacobKnox', 'FSC-File-Share', array('title' => $validatedData['category'] . ': ' . substr($validatedData['actual'], 0, 60 - strlen($validatedData['category'])), 'body' => implode(PHP_EOL, $validatedData)));
 
         return redirect()->intended('/');
