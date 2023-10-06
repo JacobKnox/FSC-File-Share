@@ -1,3 +1,3 @@
-<x-template>
-    
+<x-template pageName="Settings">
+
 </x-template>

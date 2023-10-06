@@ -38,6 +38,7 @@ Route::controller(UserController::class)->group(function () {
         Route::get('/logout', 'unauthenticate')->name('logout');
         Route::get('/users/{id}', 'show');
         Route::middleware(['auth.user'])->group(function () {
+            Route::get('/users/settings/{id}', 'settings');
             Route::put('/users/{id}', 'update');
             Route::delete('/users/{id}', 'destroy');
             Route::get('/users/{id}/edit', 'edit');
@@ -51,13 +52,13 @@ Route::controller(FileController::class)->group(function () {
         Route::get('/files/create', 'create');
         Route::post('/files/create', 'store');
         # Create like controller?
-        Route::get('/files/{id}/like/id={user}', 'like');
-        Route::get('/files/{id}/unlike/id={user}', 'unlike');
+        Route::get('/files/{id}/like/id={user}', 'like'); # Need to add middleware here
+        Route::get('/files/{id}/unlike/id={user}', 'unlike'); # Need to add middleware here
         Route::get('/files/{id}/download', 'download');
         # Create comment controller?
         Route::post('/files/{id}/comment/id={user}', 'comment');
-        Route::put('/files/{id}/comment/id={comment}', 'updateComment');
-        Route::delete('/files/{id}/comment/id={comment}', 'deleteComment');
+        Route::put('/files/{id}/comment/id={comment}', 'updateComment'); # Need to add middleware here
+        Route::delete('/files/{id}/comment/id={comment}', 'deleteComment'); # Need to add middleware here
         Route::delete('/files/{id}', 'destroy'); # Need to add middleware here
         Route::put('/files/{id}', 'update'); # Need to add middleware here
     });

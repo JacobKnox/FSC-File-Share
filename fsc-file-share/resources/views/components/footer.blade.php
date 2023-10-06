@@ -13,7 +13,7 @@
             <li class="nav-item mb-2"><a href="/files" class="nav-link p-0 text-muted">Files</a></li>
             @auth
                 <li class="nav-item mb-2"><a href="/users/{{$user->id}}" class="nav-link p-0 text-muted">Profile</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Settings</a></li>
+                <li class="nav-item mb-2"><a href="/users/settings/{{$user->id}}" class="nav-link p-0 text-muted">Settings</a></li>
             @else
                 <li class="nav-item mb-2"><a href="/login" class="nav-link p-0 text-muted">Login</a></li>
                 <li class="nav-item mb-2"><a href="/signup" class="nav-link p-0 text-muted">Sign Up</a></li>

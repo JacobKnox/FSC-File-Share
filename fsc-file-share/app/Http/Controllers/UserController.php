@@ -103,4 +103,8 @@ class UserController extends Controller
         $request->session()->regenerate();
         return redirect('/');
     }
+
+    public function settings(string $id){
+        return view('user.settings', ['user' => User::findOrFail($id)]);
+    }
 }
