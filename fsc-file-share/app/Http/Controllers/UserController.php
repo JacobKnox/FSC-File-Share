@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\File;
+use App\Models\Like;
+use App\Models\Comment;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\UserDeleteRequest;
 
 class UserController extends Controller
 {
@@ -79,8 +83,18 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(UserDeleteRequest $request, int $id)
     {
+        $options = $request->validated();
+        if($options['likes']){
+            Like::destroy(Like::select('id')->where('user_id', $id)->get());
+        }
+        if($options['comments']){
+            Comment::destroy(Comment::select('id')->where('user_id', $id)->get());
+        }
+        if($options['files']){
+            File::destroy(File::select('id')->where('user_id', $id)->get());
+        }
         User::destroy($id);
         return redirect('/');
     }

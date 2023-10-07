@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserUpdateRequest extends FormRequest
+class UserDeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return (last($this->segments()) == $this->user()->id) && config('requests.userupdate');
+        return true;
     }
 
     /**
@@ -22,9 +22,9 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'username' => 'required' . ($this->username != $this->user()->username ? '|unique:users,username' : ''),
-            'pemail' => 'nullable|email' . ($this->pemail != $this->user()->pemail ? '|unique:users,pemail' : ''),
+            'likes' => '',
+            'comments' => '',
+            'files' => '',
         ];
     }
 }
