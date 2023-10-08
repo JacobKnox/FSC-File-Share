@@ -50,14 +50,14 @@
             </x-formrow>
             <x-formrow>
                 <label for="password" class="form-label"><x-asterisk></x-asterisk> Password</label>
-                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" value="{{ old('password') }}">
+                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror">
                 @error('password')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
             </x-formrow>
             <x-formrow>
                 <label for="cpassword" class="form-label"><x-asterisk></x-asterisk> Confirm Password</label>
-                <input type="password" name="cpassword" id="cpassword" class="form-control @error('cpassword') is-invalid @enderror" value="{{ old('cpassword') }}">
+                <input type="password" name="cpassword" id="cpassword" class="form-control @error('cpassword') is-invalid @enderror">
                 @error('cpassword')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
