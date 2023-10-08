@@ -86,13 +86,13 @@ class UserController extends Controller
     public function destroy(UserDeleteRequest $request, int $id)
     {
         $options = $request->validated();
-        if($options['likes']){
+        if(isset($options['likes']) && $options['likes']){
             Like::destroy(Like::select('id')->where('user_id', $id)->get());
         }
-        if($options['comments']){
+        if(isset($options['comments']) && $options['comments']){
             Comment::destroy(Comment::select('id')->where('user_id', $id)->get());
         }
-        if($options['files']){
+        if(isset($options['files']) && $options['files']){
             File::destroy(File::select('id')->where('user_id', $id)->get());
         }
         User::destroy($id);

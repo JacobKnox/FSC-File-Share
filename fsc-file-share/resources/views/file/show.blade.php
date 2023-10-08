@@ -7,7 +7,11 @@
             <div class="col text-center">
                 <p class="my-1 fs-4 fw-bold">{{$file->title}}</p>
                 <p class="my-1 fs-6 text-muted text-capitalize">{{implode(', ', $file->tags())}}</p>
-                <p class="my-1 fs-6">Uploaded by <a href="/users/{{$file->user->id}}" class="text-decoration-none link-primary">{{$file->user->name}}</a></p>
+                @if(!isset($file->user))
+                    <p class="my-1 fs-6">Uploaded by Deleted User</p>
+                @else
+                    <p class="my-1 fs-6">Uploaded by <a href="/users/{{$file->user->id}}" class="text-decoration-none link-primary">{{$file->user->name}}</a></p>
+                @endif
                 <p class="my-1 fs-6">{{$file->description}}</p>
                 <div class="container">
                     <div class="row row-cols-2 row-cols-sm-3 justify-content-center">
@@ -62,7 +66,7 @@
                                 </svg>
                             @endif
                         </div>
-                        @if($user != null && $user->id == $file->user->id)
+                        @if($user != null && $file->user != null && $user->id == $file->user->id)
                             <div class="col">
                                 <button type="button" class="btn p-0 mt-4 mt-sm-0 mb-4" data-bs-toggle="modal" data-bs-target="#updateModal">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pencil text-success" viewBox="0 0 16 16">
@@ -107,9 +111,13 @@
                                     <div class='col container'>
                                         <div class="row row-cols-2">
                                             <div class="col">
-                                                <a href="/users/{{$comment->user->id}}">{{$comment->user->name}}</a>
+                                                @if($comment->user != null)
+                                                    <a href="/users/{{$comment->user->id}}">{{$comment->user->name}}</a>
+                                                @else
+                                                    <p class="m-0">Deleted User</p>
+                                                @endif
                                             </div>
-                                            @if($user != null && $user->id == Auth::user()->id)
+                                            @if($comment->user != null && $user != null && $user->id == $comment->user->id)
                                                 <div class="col text-end">
                                                     <button class="btn py-0 px-0" id="commentUpdate{{$comment->id}}Btn" type="button" data-bs-toggle="collapse" data-bs-target="#commentUpdateForm" aria-controls="commentUpdateForm" aria-expanded="false" aria-label="Toggle comment update form">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
@@ -119,7 +127,7 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        @if($user != null && $user->id == Auth::user()->id)
+                                        @if($comment->user != null && $user != null && $user->id == $comment->user->id)
                                             <div class="collapse container" id="commentUpdateForm">
                                                 <div class="row align-items-end">
                                                     <div class="col px-0">
