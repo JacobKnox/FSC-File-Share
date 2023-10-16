@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('likes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('file_id');
+            $table->id()->nullable(false);
+            $table->foreignId('user_id')->nullable(false);
+            $table->foreignId('file_id')->nullable(false);
             $table->timestamps();
         });
     }

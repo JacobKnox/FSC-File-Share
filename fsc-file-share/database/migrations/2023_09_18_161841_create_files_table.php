@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id');
-            $table->string('title', 1000);
-            $table->string('description', 1000);
-            $table->string('path', 1000);
-            $table->string('tags', 1000)->nullable();
+            $table->id()->nullable(false);
+            $table->foreignId('user_id')->nullable(false);
+            $table->string('title', 1000)->nullable(false);
+            $table->string('description', 1000)->nullable(true);
+            $table->string('path', 1000)->nullable(false);
+            $table->string('tags', 1000)->nullable(true);
             $table->boolean('comments')->default(0);
             $table->boolean('likes')->default(0);
             $table->boolean('downloads')->default(0);
