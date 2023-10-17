@@ -48,6 +48,7 @@ Route::controller(UserController::class)->group(function () {
 
 Route::controller(FileController::class)->group(function () {
     Route::get('/files', 'index');
+    Route::post('/files', 'filter');
     Route::middleware(['auth'])->group(function () {
         Route::get('/files/create', 'create');
         Route::post('/files/create', 'store');
