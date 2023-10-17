@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CommentCreateRequest;
 use App\Http\Requests\CommentDeleteRequest;
 use App\Http\Requests\FileCreateRequest;
+use App\Http\Requests\FileFilterRequest;
 use App\Http\Requests\FileUpdateRequest;
 use App\Models\File;
 use App\Models\Like;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 class FileController extends Controller
 {
@@ -19,6 +21,27 @@ class FileController extends Controller
     public function index()
     {
         return view('file.index', ['files' => File::all()]);
+    }
+
+    public function filter(FileFilterRequest $request)
+    {
+        $criteria = $request->validated();
+        
+        if(!isset($criteria['tags'])){
+            $criteria['tags'] = null;
+        }
+
+        return view('file.index', ['files' => File::query()
+                                                    ->when($criteria['tags'], function (Builder $query, array $tags) {
+                                                        $query->whereJsonContains('tags', $tags);
+                                                    })
+                                                    ->when($criteria['title'], function (Builder $query, string $title) {
+                                                        $query->where('title', 'like', '%'.$title.'%');
+                                                    })
+                                                    ->when($criteria['description'], function (Builder $query, string $description) {
+                                                        $query->where('description', 'like', '%'.$description.'%');
+                                                    })
+                                                    ->get()]);
     }
 
     /**
