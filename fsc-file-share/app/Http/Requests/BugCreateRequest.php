@@ -23,7 +23,7 @@ class BugCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => ['required', Rule::in(['text-error', 'visual', 'security', 'other'])],
+            'category' => ['required', Rule::in(config('requests.bugs.categories'))],
             'intended' => 'required',
             'actual' => 'required',
             'page' => 'required|url',

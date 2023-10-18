@@ -11,7 +11,7 @@ class UserDeleteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return (last($this->segments()) == $this->user()->id) && config('requests.userdelete');
     }
 
     /**

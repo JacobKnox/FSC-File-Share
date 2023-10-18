@@ -11,7 +11,7 @@ class CommentDeleteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return true && config('requests.bugdelete');
     }
 
     /**
