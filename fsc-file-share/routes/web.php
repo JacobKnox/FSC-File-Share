@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\BugController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EmailController;
 
 /*
@@ -36,12 +37,12 @@ Route::controller(UserController::class)->group(function () {
 
     Route::middleware(['auth', /*'verified'*/])->group(function () {
         Route::get('/logout', 'unauthenticate')->name('logout');
-        Route::get('/users/{id}', 'show');
+        Route::get('/users/{user_id}', 'show');
         Route::middleware(['auth.user'])->group(function () {
-            Route::get('/users/settings/{id}', 'settings');
-            Route::put('/users/{id}', 'update');
-            Route::delete('/users/{id}', 'destroy');
-            Route::get('/users/{id}/edit', 'edit');
+            Route::get('/users/settings/{user_id}', 'settings');
+            Route::put('/users/{user_id}', 'update');
+            Route::delete('/users/{user_id}', 'destroy');
+            Route::get('/users/{user_id}/edit', 'edit');
         });
     });
 });
@@ -52,19 +53,25 @@ Route::controller(FileController::class)->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('/files/create', 'create');
         Route::post('/files/create', 'store');
+        Route::get('/files/{file_id}/download', 'download');
         # Create like controller?
-        Route::get('/files/{id}/like/id={user}', 'like'); # Need to add middleware here
-        Route::get('/files/{id}/unlike/id={user}', 'unlike'); # Need to add middleware here
-        Route::get('/files/{id}/download', 'download');
-        # Create comment controller?
-        Route::post('/files/{id}/comment/id={user}', 'comment');
-        Route::put('/files/{id}/comment/id={comment}', 'updateComment'); # Need to add middleware here
-        Route::delete('/files/{id}/comment/id={comment}', 'deleteComment'); # Need to add middleware here
-        Route::delete('/files/{id}', 'destroy'); # Need to add middleware here
-        Route::put('/files/{id}', 'update'); # Need to add middleware here
+        Route::middleware(['auth.user'])->group(function () {
+            Route::get('/files/{file_id}/like/id={user_id}', 'like');
+            Route::get('/files/{file_id}/unlike/id={user_id}', 'unlike');
+            Route::delete('/files/{file_id}', 'destroy');
+            Route::put('/files/{file_id}', 'update');
+        });
     });
-    Route::get('/files/{id}', 'show');
-    Route::get('/files/{id}/preview', 'preview');
+    Route::get('/files/{file_id}', 'show');
+    Route::get('/files/{file_id}/preview', 'preview');
+});
+
+Route::controller(CommentController::class)->middleware(['auth'])->group(function () {
+    Route::post('/files/{file_id}/comments/{user_id}', 'store');
+    Route::middleware(['auth.user'])->group(function () {
+        Route::put('/files/comments/{comment_id}', 'update');
+        Route::delete('/files/comments/{comment_id}', 'destroy');
+    });
 });
 
 /*

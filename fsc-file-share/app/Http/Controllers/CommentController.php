@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\CommentCreateRequest;
+use App\Http\Requests\CommentDeleteRequest;
+use App\Models\Comment;
 
 class CommentController extends Controller
 {
@@ -25,9 +27,15 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(string $file_id, string $user_id, CommentCreateRequest $request)
     {
-        //
+        # Try to find the user and the file, redirect back with errors if not found
+        Comment::create([
+            'user_id' => $user_id,
+            'file_id' => $file_id,
+            'content' => $request->validated('content'),
+        ]);
+        return back();
     }
 
     /**
@@ -49,16 +57,18 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(string $id, CommentCreateRequest $request)
     {
-        //
+        Comment::findOrFail($id)->update($request->validated());
+        return back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, CommentDeleteRequest $request)
     {
-        //
+        Comment::destroy($id);
+        return back();
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CommentCreateRequest;
-use App\Http\Requests\CommentDeleteRequest;
 use App\Http\Requests\FileCreateRequest;
 use App\Http\Requests\FileFilterRequest;
 use App\Http\Requests\FileUpdateRequest;
@@ -90,24 +88,6 @@ class FileController extends Controller
     public function unlike(string $id, string $user)
     {
         File::findOrFail($id)->removeLike($user);
-        return back();
-    }
-
-    public function comment(string $id, string $user, CommentCreateRequest $request)
-    {
-        File::findOrFail($id)->addComment($user, $request->validated());
-        return back();
-    }
-
-    public function updateComment(string $id, string $comment, CommentCreateRequest $request)
-    {
-        Comment::findOrFail($comment)->update($request->validated());
-        return back();
-    }
-
-    public function deleteComment(string $id, string $comment, CommentDeleteRequest $request)
-    {
-        Comment::destroy($comment);
         return back();
     }
 

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BugCreateRequest;
 use Illuminate\Http\Request;
 use GrahamCampbell\GitHub\Facades\GitHub;
-use Github\AuthMethod;
 
 class BugController extends Controller
 {

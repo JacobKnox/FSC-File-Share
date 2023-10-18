@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Comment;
+use Illuminate\Support\Facades\Auth;
 
 class CommentDeleteRequest extends FormRequest
 {
@@ -11,7 +13,8 @@ class CommentDeleteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true && config('requests.bugdelete');
+        # Config isn't working probably
+        return Comment::findOrFail($this->comment_id)->user == Auth::user();
     }
 
     /**

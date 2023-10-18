@@ -66,7 +66,7 @@
                                 </svg>
                             @endif
                         </div>
-                        @if($user != null && $file->user != null && $user->id == $file->user->id)
+                        @if($user?->id == $file->user?->id)
                             <div class="col">
                                 <button type="button" class="btn p-0 mt-4 mt-sm-0 mb-4" data-bs-toggle="modal" data-bs-target="#updateModal">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pencil text-success" viewBox="0 0 16 16">
@@ -89,7 +89,7 @@
                     <div class="border-top border-black border-2 pt-2">
                         @if($user != null)
                             <div class="collapse" id="commentForm">
-                                <form action="/files/{{$file->id}}/comment/id={{$user->id}}" method="POST">
+                                <form action="/files/{{$file->id}}/comments/{{$user->id}}" method="POST">
                                     @csrf
                                     <x-formrow col='12'>
                                         <x-asterisk></x-asterisk>
@@ -117,7 +117,7 @@
                                                     <p class="m-0">Deleted User</p>
                                                 @endif
                                             </div>
-                                            @if($comment->user != null && $user != null && $user->id == $comment->user->id)
+                                            @if($user?->id == $comment->user?->id)
                                                 <div class="col text-end">
                                                     <button class="btn py-0 px-0" id="commentUpdate{{$comment->id}}Btn" type="button" data-bs-toggle="collapse" data-bs-target="#commentUpdateForm" aria-controls="commentUpdateForm" aria-expanded="false" aria-label="Toggle comment update form">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
@@ -127,11 +127,11 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        @if($comment->user != null && $user != null && $user->id == $comment->user->id)
+                                        @if($user?->id == $comment->user?->id)
                                             <div class="collapse container" id="commentUpdateForm">
                                                 <div class="row align-items-end">
                                                     <div class="col px-0">
-                                                        <form action="/files/{{$file->id}}/comment/id={{$comment->id}}" method="POST">
+                                                        <form action="/files/comments/{{$comment->id}}" method="POST">
                                                             @csrf
                                                             @method("PUT")
                                                             <x-formrow align='start' col='12'>
@@ -142,7 +142,7 @@
                                                         </form>
                                                     </div>
                                                     <div class="col-3 px-0 text-end">
-                                                        <form action="/files/{{$file->id}}/comment/id={{$comment->id}}" method="POST">
+                                                        <form action="/files/comments/{{$comment->id}}" method="POST">
                                                             @method("DELETE")
                                                             @csrf
                                                             <button type="submit" class="btn btn-danger">Delete</button>
