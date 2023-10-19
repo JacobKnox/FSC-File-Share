@@ -5,7 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\BugController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\EmailController;
+// use App\Http\Controllers\EmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,10 +39,9 @@ Route::controller(UserController::class)->group(function () {
         Route::get('/logout', 'unauthenticate')->name('logout');
         Route::get('/users/{user_id}', 'show');
         Route::middleware(['auth.user'])->group(function () {
-            Route::get('/users/settings/{user_id}', 'settings');
+            Route::get('/users/settings/{user_id}', 'edit');
             Route::put('/users/{user_id}', 'update');
             Route::delete('/users/{user_id}', 'destroy');
-            Route::get('/users/{user_id}/edit', 'edit');
         });
     });
 });
@@ -54,7 +53,6 @@ Route::controller(FileController::class)->group(function () {
         Route::get('/files/create', 'create');
         Route::post('/files/create', 'store');
         Route::get('/files/{file_id}/download', 'download');
-        # Create like controller?
         Route::middleware(['auth.user'])->group(function () {
             Route::get('/files/{file_id}/like/id={user_id}', 'like');
             Route::get('/files/{file_id}/unlike/id={user_id}', 'unlike');

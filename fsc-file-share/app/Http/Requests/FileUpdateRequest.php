@@ -12,7 +12,7 @@ class FileUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return File::findOrFail(last($this->segments()))->user_id == $this->user()->id && config('requests.fileupdate');
+        return File::find($this->file_id)?->user == $this->user() && config('requests.fileupdate');
     }
 
     /**
@@ -23,7 +23,7 @@ class FileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string' . (File::findOrFail(last($this->segments()))->title != $this->title ? '|unique:files,title' : ''),
+            'title' => 'required|string' . (File::find($this->file_id)?->title != $this->title ? '|unique:files,title' : ''),
             'description' => 'required|string',
             'downloads' => 'nullable',
             'comments' => 'nullable',

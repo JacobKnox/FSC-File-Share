@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class CommentCreateRequest extends FormRequest
 {
@@ -12,7 +12,7 @@ class CommentCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check() && config('requests.commentcreate');
+        return User::find($this->user_id) == $this->user() && config('requests.commentcreate');
     }
 
     /**

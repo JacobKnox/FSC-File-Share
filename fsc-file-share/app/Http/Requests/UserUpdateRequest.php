@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\User;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return (last($this->segments()) == $this->user()->id) && config('requests.userupdate');
+        return (User::find($this->user_id) == $this->user()) && config('requests.userupdate');
     }
 
     /**

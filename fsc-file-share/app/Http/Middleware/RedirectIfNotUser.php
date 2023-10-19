@@ -19,11 +19,11 @@ class RedirectIfNotUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user() == null){
+        if($request->user() == null){
             return back();//->with(['problems' => ["You're not logged in!"]]);
         }
         
-        if(Auth::user() == User::find($request->user_id) || Auth::user() == Comment::find($request->comment_id)?->user || Auth::user() == File::find($request->file_id)?->user){
+        if($request->user() == User::find($request->user_id) || $request->user() == Comment::find($request->comment_id)?->user || $request->user() == File::find($request->file_id)?->user){
             return $next($request);
         }
         

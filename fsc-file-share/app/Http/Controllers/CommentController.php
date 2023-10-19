@@ -5,33 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CommentCreateRequest;
 use App\Http\Requests\CommentDeleteRequest;
 use App\Models\Comment;
-// use App\Models\File;
+use App\Models\File;
 // use App\Models\User;
 
 class CommentController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a newly created comment in storage.
      */
     public function store(string $file_id, string $user_id, CommentCreateRequest $request)
     {
-        # Try to find the user and the file, redirect back with errors if not found
+        // Try to find the user and the file, redirect back with errors if not found
+
         // $problems = [];
 
         // if(File::find($file_id) == null){
@@ -46,45 +31,33 @@ class CommentController extends Controller
         //     return back()->with(['problems' => $problems]);
         // }
 
-        Comment::create([
-            'user_id' => $user_id,
-            'file_id' => $file_id,
-            'content' => $request->validated('content'),
-        ]);
+        if(File::find($file_id)?->comments){
+            Comment::create([
+                'user_id' => $user_id,
+                'file_id' => $file_id,
+                'content' => $request->validated('content'),
+            ]);
+        }
 
         return back();
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Update the specified comment in storage.
      */
     public function update(string $id, CommentCreateRequest $request)
     {
-        Comment::find($id)?->update($request->validated());
+        // Need to add error handling here
+        Comment::find($id)?->update($request->validated('content'));
         return back();
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified comment from storage.
      */
     public function destroy(string $id, CommentDeleteRequest $request)
     {
+        // Need to add error handling here
         Comment::destroy($id);
         return back();
     }

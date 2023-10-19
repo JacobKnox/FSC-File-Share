@@ -24,7 +24,7 @@ class UserCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', Rule::in(['student', 'faculty'])],
+            'status' => ['required', Rule::in(config('requests.users.status'))],
             'name' => 'required',
             'sid' => 'required|integer|min_digits:7|unique:users,sid',
             'username' => 'required|unique:users,username',

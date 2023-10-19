@@ -14,4 +14,7 @@ return [
     'bugs' => [
         'categories' => ['text-error', 'visual', 'security', 'other'],
     ],
+    'users' => [
+        'status' => ['student', 'faculty'],
+    ],
 ];

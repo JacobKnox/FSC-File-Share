@@ -57,13 +57,6 @@ class File extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function addComment(string $user_id, $validatedData)
-    {
-        if ($this->comments) {
-            Comment::create(['file_id' => $this->id, 'user_id' => $user_id, 'content' => $validatedData['content']]);
-        }
-    }
-
     public function addLike(string $user_id)
     {
         if ($this->likes) {
@@ -75,11 +68,9 @@ class File extends Model
 
     public function removeLike(string $user_id)
     {
-        if ($this->likes) {
-            Like::where(['file_id' => $this->id, 'user_id' => $user_id])->delete();
-            $this->count_likes -= 1;
-            $this->save();
-        }
+        Like::where(['file_id' => $this->id, 'user_id' => $user_id])->delete();
+        $this->count_likes -= 1;
+        $this->save();
     }
 
     public function access()
@@ -109,5 +100,18 @@ class File extends Model
             'downloads' => isset($input['downloads']) ? 1 : 0,
             'tags' => json_encode($input['tags'])
         ]);
+    }
+
+    public function updateFromInput($input)
+    {
+        $this->update([
+            'title' => $input['title'],
+            'description' => $input['description'],
+            'comments' => isset($input['comments']) ? 1 : 0,
+            'likes' => isset($input['likes']) ? 1 : 0,
+            'downloads' => isset($input['downloads']) ? 1 : 0,
+            'tags' => json_encode($input['tags']),
+        ]);
+        $this->save();
     }
 }

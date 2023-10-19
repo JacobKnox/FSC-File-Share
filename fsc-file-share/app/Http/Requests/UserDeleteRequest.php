@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\User;
 
 class UserDeleteRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UserDeleteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return (last($this->segments()) == $this->user()->id) && config('requests.userdelete');
+        return (User::find($this->user_id) == $this->user()) && config('requests.userdelete');
     }
 
     /**

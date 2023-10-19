@@ -14,13 +14,16 @@ use Illuminate\Database\Eloquent\Builder;
 class FileController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the files.
      */
     public function index()
     {
         return view('file.index', ['files' => File::all()]);
     }
 
+    /**
+     * Display a listing of the files based on user filters.
+     */
     public function filter(FileFilterRequest $request)
     {
         $criteria = $request->validated();
@@ -29,6 +32,7 @@ class FileController extends Controller
             $criteria['tags'] = null;
         }
 
+        // This works, but unsure if there is a better way
         return view('file.index', ['files' => File::query()
                                                     ->when($criteria['tags'], function (Builder $query, array $tags) {
                                                         $query->whereJsonContains('tags', $tags);
@@ -43,7 +47,7 @@ class FileController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new file.
      */
     public function create()
     {
@@ -51,7 +55,7 @@ class FileController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created file in storage.
      */
     public function store(FileCreateRequest $request)
     {
@@ -59,10 +63,11 @@ class FileController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified file.
      */
     public function show(string $id)
     {
+        // Need to add error handling here
         return view('file.show', ['file' => File::findOrFail($id), 'user' => Auth::user()]);
     }
 
@@ -71,22 +76,29 @@ class FileController extends Controller
      */
     public function preview(string $id)
     {
+        // Need to add error handling here
         return File::findOrFail($id)->access();
     }
 
+    /**
+     * Force the user's browser to download the file.
+     */
     public function download(string $id)
     {
+        // Need to add error handling here
         return File::findOrFail($id)->download();
     }
 
     public function like(string $id, string $user)
     {
+        // Need to add error handling here
         File::findOrFail($id)->addLike($user);
         return back();
     }
 
     public function unlike(string $id, string $user)
     {
+        // Need to add error handling here
         File::findOrFail($id)->removeLike($user);
         return back();
     }
@@ -96,15 +108,8 @@ class FileController extends Controller
      */
     public function update(FileUpdateRequest $request, string $id)
     {
-        $data = $request->validated();
-        File::findOrFail($id)->update([
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'comments' => isset($data['comments']) ? 1 : 0,
-            'likes' => isset($data['likes']) ? 1 : 0,
-            'downloads' => isset($data['downloads']) ? 1 : 0,
-            'tags' => json_encode($data['tags']),
-        ]);
+        // Need to add error handling here
+        File::findOrFail($id)->updateFromInput($request->validated());
         return redirect('/files/' . $id);
     }
 

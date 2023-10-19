@@ -16,7 +16,7 @@ use App\Http\Requests\UserDeleteRequest;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the users.
      */
     public function index()
     {
@@ -24,7 +24,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new user.
      */
     public function signup()
     {
@@ -40,7 +40,7 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created user in storage.
      */
     public function create(UserCreateRequest $request)
     {
@@ -48,40 +48,41 @@ class UserController extends Controller
             $request->session()->regenerate();
             # $user->sendEmailVerificationNotification();
             # return redirect('/email/verify');
-
-
         }
 
         return redirect('/');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified user.
      */
     public function show(string $id)
     {
+        // Need to add error handling here
         return view('user.profile', ['user' => User::findOrFail($id)]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified user.
      */
     public function edit(string $id)
     {
-        return view('user.edit', ['user' => User::findOrFail($id)]);
+        // Need to add error handling here
+        return view('user.settings', ['user' => User::findOrFail($id)]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified user in storage.
      */
     public function update(UserUpdateRequest $request, string $id)
     {
+        // Need to add error handling here
         User::findOrFail($id)->update($request->validated());
         return redirect('/users/' . $id);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified user from storage.
      */
     public function destroy(UserDeleteRequest $request, int $id)
     {
@@ -99,6 +100,9 @@ class UserController extends Controller
         return redirect('/');
     }
 
+    /**
+     * Log the user in.
+     */
     public function authenticate(UserLoginRequest $request)
     {
         if (Auth::attempt($request->validated())) {
@@ -111,14 +115,13 @@ class UserController extends Controller
         ])->onlyInput('username');
     }
 
+    /**
+     * Log the user out.
+     */
     public function unauthenticate(Request $request)
     {
         Auth::logout();
         $request->session()->regenerate();
         return redirect('/');
-    }
-
-    public function settings(string $id){
-        return view('user.settings', ['user' => User::findOrFail($id)]);
     }
 }
