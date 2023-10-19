@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CommentCreateRequest;
 use App\Http\Requests\CommentDeleteRequest;
 use App\Models\Comment;
+// use App\Models\File;
+// use App\Models\User;
 
 class CommentController extends Controller
 {
@@ -30,11 +32,26 @@ class CommentController extends Controller
     public function store(string $file_id, string $user_id, CommentCreateRequest $request)
     {
         # Try to find the user and the file, redirect back with errors if not found
+        // $problems = [];
+
+        // if(File::find($file_id) == null){
+        //     array_push($problems, ["Couldn't find file with id ".$file_id]);
+        // }
+
+        // if(User::find($user_id) == null){
+        //     array_push($problems, ["Couldn't find user with id ".$user_id]);
+        // }
+
+        // if(!empty($problems)){
+        //     return back()->with(['problems' => $problems]);
+        // }
+
         Comment::create([
             'user_id' => $user_id,
             'file_id' => $file_id,
             'content' => $request->validated('content'),
         ]);
+
         return back();
     }
 
@@ -59,7 +76,7 @@ class CommentController extends Controller
      */
     public function update(string $id, CommentCreateRequest $request)
     {
-        Comment::findOrFail($id)->update($request->validated());
+        Comment::find($id)?->update($request->validated());
         return back();
     }
 
