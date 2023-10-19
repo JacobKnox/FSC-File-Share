@@ -11,7 +11,8 @@ class FileFilterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true && config('requests.filefilter');
+        return true;
+        // return true && config('requests.filefilter');
     }
 
     /**

@@ -31,6 +31,12 @@ class FileController extends Controller
         if(!isset($criteria['tags'])){
             $criteria['tags'] = null;
         }
+        if(!isset($criteria['title'])){
+            $criteria['title'] = null;
+        }
+        if(!isset($criteria['description'])){
+            $criteria['description'] = null;
+        }
 
         // This works, but unsure if there is a better way
         return view('file.index', ['files' => File::query()

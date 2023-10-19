@@ -6,7 +6,14 @@
             </div>
             <div class="col text-center">
                 <p class="my-1 fs-4 fw-bold">{{$file->title}}</p>
-                <p class="my-1 fs-6 text-muted text-capitalize">{{implode(', ', $file->tags())}}</p>
+                @foreach($file->tags() as $tag)
+                    <form method="POST" action="/files" class="inline">
+                        @csrf
+                        <input type="hidden" name="tags[]" id="tags" class="form-control" value="{{$tag}}">
+                        <button type="submit" class="btn">{{$tag}}</button>
+                    </form>
+                @endforeach
+                {{-- <p class="my-1 fs-6 text-muted text-capitalize">{{implode(', ', $file->tags())}}</p> --}}
                 @if(!isset($file->user))
                     <p class="my-1 fs-6">Uploaded by Deleted User</p>
                 @else
