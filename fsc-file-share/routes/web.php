@@ -5,6 +5,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\BugController;
 use App\Http\Controllers\CommentController;
+use App\Models\Bug;
+use App\Models\Report;
 // use App\Http\Controllers\EmailController;
 
 /*
@@ -21,6 +23,10 @@ use App\Http\Controllers\CommentController;
 Route::get('/', function () {
     return view('index');
 })->name('home');
+
+Route::get('/admin', function () {
+    return view('admin.dashboard', ['bugs' => Bug::all(), 'automod' => Report::where('reporter', '=', 0), 'reports' => Report::where('reporter', '>', 0)]);
+})->name('dashboard');
 
 Route::controller(BugController::class)->group(function () {
     Route::get('/bug', 'create');

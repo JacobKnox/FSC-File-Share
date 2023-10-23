@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BugCreateRequest;
 use Illuminate\Http\Request;
 use GrahamCampbell\GitHub\Facades\GitHub;
+use App\Models\Bug;
 
 class BugController extends Controller
 {
@@ -30,10 +31,11 @@ class BugController extends Controller
     public function store(BugCreateRequest $request)
     {
         $validatedData = $request->validated();
-
+        $validatedData['reporter'] = $request->user() ? $request->user()->id : -1;
         // Will need to change this when I get admin dashboard
         // Need to add error handling for this
-        GitHub::issues()->create('JacobKnox', 'FSC-File-Share', array('title' => $validatedData['category'] . ': ' . substr($validatedData['actual'], 0, 60 - strlen($validatedData['category'])), 'body' => implode(PHP_EOL, $validatedData)));
+        Bug::create($validatedData);
+        // GitHub::issues()->create('JacobKnox', 'FSC-File-Share', array('title' => $validatedData['category'] . ': ' . substr($validatedData['actual'], 0, 60 - strlen($validatedData['category'])), 'body' => implode(PHP_EOL, $validatedData)));
 
         return redirect()->intended('/');
     }
