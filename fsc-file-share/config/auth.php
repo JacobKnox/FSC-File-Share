@@ -40,6 +40,21 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'admin',
+        ],
+        'student' => [
+            'driver' => 'student',
+        ],
+        'faculty' => [
+            'driver' => 'faculty',
+        ],
+        'alumni' => [
+            'driver' => 'alumni',
+        ],
+        'moderator' => [
+            'driver' => 'moderator',
+        ],
     ],
 
     /*

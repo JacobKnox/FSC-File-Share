@@ -88,4 +88,8 @@ class User extends Authenticatable # implements MustVerifyEmail
 
         return Auth::attempt($credentials);
     }
+
+    public function checkRole(string $role){
+        return $this->status == strtolower($role);
+    }
 }

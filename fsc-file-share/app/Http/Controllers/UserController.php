@@ -121,7 +121,10 @@ class UserController extends Controller
     public function unauthenticate(Request $request)
     {
         Auth::logout();
-        $request->session()->regenerate();
+        $request->session()->invalidate();
+ 
+        $request->session()->regenerateToken();
+        
         return redirect('/');
     }
 }

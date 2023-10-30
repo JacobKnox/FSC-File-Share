@@ -24,10 +24,6 @@ Route::get('/', function () {
     return view('index');
 })->name('home');
 
-Route::get('/admin', function () {
-    return view('admin.dashboard', ['bugs' => Bug::all(), 'automod' => Report::where('reporter', '=', 0), 'reports' => Report::where('reporter', '>', 0)]);
-})->name('dashboard');
-
 Route::controller(BugController::class)->group(function () {
     Route::get('/bug', 'create');
     Route::post('/bug', 'store');
@@ -76,6 +72,12 @@ Route::controller(CommentController::class)->middleware(['auth'])->group(functio
         Route::put('/files/comments/{comment_id}', 'update');
         Route::delete('/files/comments/{comment_id}', 'destroy');
     });
+});
+
+Route::middleware(['auth:moderator'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard', ['bugs' => Bug::all(), 'automod' => Report::where('reporter', '=', 0), 'reports' => Report::where('reporter', '>', 0)]);
+    })->name('dashboard');
 });
 
 /*

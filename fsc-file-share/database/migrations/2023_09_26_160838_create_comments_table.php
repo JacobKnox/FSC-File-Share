@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable(false);
             $table->foreignId('file_id')->nullable(false);
             $table->string('content', 1000)->nullable(false);
+            $table->boolean('visible')->nullable(false)->default(true);
             $table->timestamps();
         });
     }
