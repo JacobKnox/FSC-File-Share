@@ -30,6 +30,28 @@ class User extends Authenticatable # implements MustVerifyEmail
     ];
 
     /**
+     * The valid options for status
+     * 
+     * @var array<string>
+     */
+    public static $valid_statuses = [
+        'student',
+        'faculty',
+        'alumni',
+    ];
+
+    /**
+     * The valid options for roles
+     * 
+     * @var array<string>
+     */
+    public static $valid_roles = [
+        'user',
+        'mod',
+        'admin',
+    ];
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
@@ -89,7 +111,75 @@ class User extends Authenticatable # implements MustVerifyEmail
         return Auth::attempt($credentials);
     }
 
-    public function checkRole(string $role){
-        return $this->status == strtolower($role);
+    public function checkStatus(string $check_status){
+        return $this->status == $check_status;
+    }
+
+    public static function updateStatus(string $request_id, string $target_id, string $new_status){
+        if(!User::find($request_id)?->checkRoles(['mod'])){
+            return False;
+        }
+        if(!in_array($new_status, User::$valid_statuses, True)){
+            return False;
+        }
+        return User::find($target_id)->changeStatus($new_status);
+    }
+
+    private function changeStatus(string $new_status){
+        if(!in_array($new_status, User::$valid_statuses, True)){
+            return False;
+        }
+        $this->status = $new_status;
+        $this->save();
+        return True;
+    }
+
+    public function checkRoles(array $roles, bool $all = True){
+        $user_roles = json_decode($this->roles);
+        foreach($roles as $role){
+            if(in_array($role, $user_roles, True) && !$all){
+                return True;
+            }
+            if(!in_array($role, $user_roles, True) && $all){
+                return False;
+            }
+        }
+        return True;
+    }
+
+    public static function changeRoles(string $request_id, string $target_id, array $roles, string $action){
+        if(!User::find($request_id)?->checkRoles(["admin"])){
+            return False;
+        }
+        $target = User::find($target_id);
+        return ($action == "give") ? $target?->giveRoles($roles) : $target?->removeRoles($roles);
+    }
+
+    private function giveRoles(array $roles){
+        foreach($roles as $role){
+            if(!in_array($role, User::$valid_roles, True)){
+                return False;
+            }
+        }
+        $current_roles = json_decode($this->roles);
+        array_push($current_roles, $roles);
+        $this->roles = json_encode($current_roles);
+        $this->save();
+        return True;
+    }
+
+    private function removeRoles(array $roles){
+        if(in_array('user', $roles, True)){
+            return False;
+        }
+        $current_roles = json_decode($this->roles);
+        foreach($roles as $role){
+            if(in_array($role, $current_roles, True)){
+                unset($current_roles[$role]);
+            }
+        }
+        $this->roles = json_encode($current_roles);
+        $this->save();
+        return True;
     }
 }

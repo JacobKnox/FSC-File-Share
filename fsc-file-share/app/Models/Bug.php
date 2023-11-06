@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use GrahamCampbell\GitHub\Facades\GitHub;
 
 class Bug extends Model
 {
@@ -33,4 +34,12 @@ class Bug extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function push(){
+        GitHub::issues()->create('JacobKnox', 'FSC-File-Share', array('title' => $this->category . ': ' . substr($this->actual, 0, 60 - strlen($this->category)), 'body' => implode(PHP_EOL, $this->getInfo())));
+    }
+
+    public function getInfo(){
+        return [$this->category, $this->intended, $this->actual, $this->other, $this->page];
+    }
 }
