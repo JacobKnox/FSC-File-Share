@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class FileCreateRequest extends FormRequest
 {
@@ -12,7 +12,7 @@ class FileCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check() && config('requests.filecreate');
+        return Gate::allows('create-file');
     }
 
     /**

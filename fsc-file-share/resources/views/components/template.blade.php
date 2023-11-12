@@ -18,6 +18,9 @@
     <body>
         <x-header/>
         <div class="mx-2 px-2">
+            @if(session('auth_error') != null)
+                <div class="bg-danger text-white py-3 text-center">{{session('auth_error')}}</div>
+            @endif
             {{-- @if(isset($problems))
                 @foreach($problems as $problem)
                     <div class="bg-danger text-white py-3 text-center">{{$problem}}</div>

@@ -144,7 +144,7 @@ class User extends Authenticatable # implements MustVerifyEmail
                 return False;
             }
         }
-        return True;
+        return (True && $all);
     }
 
     public static function changeRoles(string $request_id, string $target_id, array $roles, string $action){

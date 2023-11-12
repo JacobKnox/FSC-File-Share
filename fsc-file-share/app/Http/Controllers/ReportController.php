@@ -29,7 +29,12 @@ class ReportController extends Controller
      */
     public function store(StoreReportRequest $request)
     {
-        //
+        Report::create([
+            'reporter' => $request->user()->id,
+            'type' => $request->type == "user" ? 0 : 1,
+            'reported' => $request->reported_id,
+        ]);
+        return back();
     }
 
     /**

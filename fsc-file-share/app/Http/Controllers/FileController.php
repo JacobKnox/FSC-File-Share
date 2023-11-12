@@ -10,6 +10,8 @@ use App\Models\Like;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
+
 
 class FileController extends Controller
 {
@@ -73,8 +75,9 @@ class FileController extends Controller
      */
     public function show(string $id)
     {
-        // Need to add error handling here
-        return view('file.show', ['file' => File::findOrFail($id), 'user' => Auth::user()]);
+        $file = File::findOrFail($id);
+        $response = Gate::inspect('view-file', $file);
+        return $response->allowed() ? view('file.show', ['file' => $file, 'user' => Auth::user()]) : back()->with('auth_error', $response->message());
     }
 
     /**
@@ -114,9 +117,9 @@ class FileController extends Controller
      */
     public function update(FileUpdateRequest $request, string $id)
     {
-        // Need to add error handling here
-        File::findOrFail($id)->updateFromInput($request->validated());
-        return redirect('/files/' . $id);
+        $file = File::findOrFail($id);
+        $response = Gate::inspect('update-file', $file);
+        return $response->allowed() ? redirect('/files/' . $file->updateFromInput($request->validated())->id) : back()->with('auth_error', $response->message());
     }
 
     /**
@@ -124,9 +127,13 @@ class FileController extends Controller
      */
     public function destroy(string $id)
     {
-        Like::destroy(Like::select('id')->where('file_id', $id)->get());
-        Comment::destroy(Comment::select('id')->where('file_id', $id)->get());
-        File::destroy($id);
-        return redirect('/files');
+        $response = Gate::inspect('delete-file', File::findOrFail($id));
+        if($response->allowed()){
+            Like::destroy(Like::select('id')->where('file_id', $id)->get());
+            Comment::destroy(Comment::select('id')->where('file_id', $id)->get());
+            File::destroy($id);
+            return redirect('/files');
+        }
+        return back()->with('auth_error', $response->message());
     }
 }

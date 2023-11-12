@@ -5,8 +5,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\BugController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ReportController;
 use App\Models\Bug;
 use App\Models\Report;
+use App\Models\File;
+use App\Models\User;
 // use App\Http\Controllers\EmailController;
 
 /*
@@ -55,15 +58,17 @@ Route::controller(FileController::class)->group(function () {
         Route::get('/files/create', 'create');
         Route::post('/files/create', 'store');
         Route::get('/files/{file_id}/download', 'download');
-        Route::middleware(['auth.user'])->group(function () {
-            Route::get('/files/{file_id}/like/id={user_id}', 'like');
-            Route::get('/files/{file_id}/unlike/id={user_id}', 'unlike');
-            Route::delete('/files/{file_id}', 'destroy');
-            Route::put('/files/{file_id}', 'update');
-        });
+        Route::get('/files/{file_id}/like/id={user_id}', 'like');
+        Route::get('/files/{file_id}/unlike/id={user_id}', 'unlike');
+        Route::delete('/files/{file_id}', 'destroy');
+        Route::put('/files/{file_id}', 'update');
     });
     Route::get('/files/{file_id}', 'show');
     Route::get('/files/{file_id}/preview', 'preview');
+});
+
+Route::controller(ReportController::class)->group(function () {
+    Route::get('/report/{type}/{reported_id}', 'store');
 });
 
 Route::controller(CommentController::class)->middleware(['auth'])->group(function () {
@@ -76,7 +81,7 @@ Route::controller(CommentController::class)->middleware(['auth'])->group(functio
 
 Route::middleware(['auth:moderator'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('admin.dashboard', ['bugs' => Bug::all(), 'automod' => Report::where('reporter', '=', 0), 'reports' => Report::where('reporter', '>', 0)]);
+        return view('admin.dashboard', ['bugs' => Bug::all(), 'automod' => Report::where('reporter', '=', 0)->get(), 'reports' => Report::where('reporter', '>', 0)->get()]);
     })->name('dashboard');
 });
 

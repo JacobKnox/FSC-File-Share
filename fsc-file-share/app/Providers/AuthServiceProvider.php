@@ -8,8 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Report;
 use App\Models\File;
+use App\Models\User;
 use App\Policies\FilePolicy;
 use App\Policies\ReportPolicy;
+use App\Policies\UserPolicy;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +24,23 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Report::class => ReportPolicy::class,
         File::class => FilePolicy::class,
+        User::class => UserPolicy::class,
+    ];
+
+    protected $actions = [
+        'viewAny',
+        'view',
+        'create',
+        'update',
+        'delete',
+        'restore',
+        'forceDelete'
+    ];
+
+    protected $models = [
+        'file' => FilePolicy::class,
+        'report' => ReportPolicy::class,
+        'user' => UserPolicy::class,
     ];
 
     /**
@@ -28,6 +48,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerPolicies();
+
         Auth::viaRequest('admin', function (Request $request) {
             return $request->user()?->checkRoles(['admin']) ? $request->user() : null;
         });
@@ -47,5 +69,11 @@ class AuthServiceProvider extends ServiceProvider
         Auth::viaRequest('alumni', function (Request $request) {
             return $request->user()?->checkStatus('alumni') ? $request->user() : null;
         });
+
+        foreach($this->actions as $action){
+            foreach(array_keys($this->models) as $model){
+                Gate::define($action.'-'.$model, [$this->models[$model], $action]);
+            }
+        }
     }
 }

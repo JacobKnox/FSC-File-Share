@@ -70,6 +70,8 @@
                 </div>
             </div>
         @endif
+
+        <a href="/report/user/{{$user->id}}" class="btn btn-danger">Report</a>
     </div>
 </x-template>
 

@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\File;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class FilePolicy
+class UserPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,9 +18,9 @@ class FilePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(?User $user, ?File $file): Response
+    public function view(?User $user, ?User $model): Response
     {
-        return ($file?->visible || $user?->checkRoles(['mod', 'admin'], False) || $user?->id === $file?->user_id) ? Response::allow() : Response::deny("This file is not visible to all users right now.");
+        return ($model?->visible || $user?->checkRoles(['mod', 'admin'], False) || $user?->id === $model?->id) ? Response::allow() : Response::deny("This user is not visible to all users right now.");
     }
 
     /**
@@ -29,29 +28,29 @@ class FilePolicy
      */
     public function create(?User $user): Response
     {
-        return $user ? Response::allow() : Response::deny("Must be an authenticated user.");
+        return (!$user || $user?->checkRoles(['admin'])) ? Response::allow() : Response::deny("You are currently logged into an account and do not have administrator privileges.");
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(?User $user, ?File $file): Response
+    public function update(?User $user, ?User $model): Response
     {
-        return ($user?->id === $file?->user_id || $user?->checkRoles(['mod', 'admin'], False)) ? Response::allow() : Response::deny("You are not the owner of this file.");
+        return ($user?->id === $model?->id || $user?->checkRoles(['mod', 'admin'], False)) ? Response::allow() : Response::deny("Hey, that's not your account!");
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(?User $user, ?File $file): Response
+    public function delete(?User $user, ?User $model): Response
     {
-        return ($user?->id === $file?->user_id || $user?->checkRoles(['mod', 'admin'], False)) ? Response::allow() : Response::deny("You are not the owner of this file.");
+        return ($user?->id === $model?->id || $user?->checkRoles(['mod', 'admin'], False)) ? Response::allow() : Response::deny("Hey, that's not your account!");
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(?User $user, ?File $file): Response
+    public function restore(?User $user, ?User $model): Response
     {
         return ($user?->checkRoles(['admin'])) ? Response::allow() : Response::deny("Must have admin privileges.");
     }
@@ -59,7 +58,7 @@ class FilePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(?User $user, ?File $file): Response
+    public function forceDelete(?User $user, ?User $model): Response
     {
         return ($user?->checkRoles(['admin'])) ? Response::allow() : Response::deny("Must have admin privileges.");
     }
