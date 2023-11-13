@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class FileCreateRequest extends FormRequest
 {
@@ -12,7 +13,14 @@ class FileCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Gate::allows('create-file');
+        $response = Gate::inspect('create-file');
+        if($response->allowed())
+        {
+            return true;
+        }
+        throw new HttpResponseException(
+            back()->with('auth_error', $response->message())
+        );
     }
 
     /**

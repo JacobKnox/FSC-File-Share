@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BugCreateRequest;
 use Illuminate\Http\Request;
-use GrahamCampbell\GitHub\Facades\GitHub;
 use App\Models\Bug;
+use Illuminate\Support\Facades\Gate;
 
 class BugController extends Controller
 {
@@ -22,7 +22,12 @@ class BugController extends Controller
      */
     public function create()
     {
-        return view('bugreport');
+        $response = Gate::inspect('create-bug');
+        if($response->allowed())
+        {
+            return view('bugreport');
+        }
+        return back()->with('auth_error', $response->message());
     }
 
     /**
@@ -32,11 +37,7 @@ class BugController extends Controller
     {
         $validatedData = $request->validated();
         $validatedData['reporter'] = $request->user() ? $request->user()->id : -1;
-        // Will need to change this when I get admin dashboard
-        // Need to add error handling for this
         Bug::create($validatedData);
-        // GitHub::issues()->create('JacobKnox', 'FSC-File-Share', array('title' => $validatedData['category'] . ': ' . substr($validatedData['actual'], 0, 60 - strlen($validatedData['category'])), 'body' => implode(PHP_EOL, $validatedData)));
-
         return redirect()->intended('/');
     }
 

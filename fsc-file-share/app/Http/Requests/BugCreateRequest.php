@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class BugCreateRequest extends FormRequest
 {
@@ -12,7 +14,14 @@ class BugCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true && config('requests.bugcreate');
+        $response = Gate::inspect('create-bug');
+        if($response->allowed())
+        {
+            return true;
+        }
+        throw new HttpResponseException(
+            back()->with('auth_error', $response->message())
+        );
     }
 
     /**

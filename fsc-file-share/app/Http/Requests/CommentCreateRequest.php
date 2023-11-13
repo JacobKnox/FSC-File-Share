@@ -3,7 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\User;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CommentCreateRequest extends FormRequest
 {
@@ -12,7 +13,14 @@ class CommentCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return User::find($this->user_id) == $this->user() && config('requests.commentcreate');
+        $response = Gate::inspect('create-comment');
+        if($response->allowed())
+        {
+            return true;
+        }
+        throw new HttpResponseException(
+            back()->with('auth_error', $response->message())
+        );
     }
 
     /**

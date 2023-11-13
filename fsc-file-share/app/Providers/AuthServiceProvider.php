@@ -11,7 +11,9 @@ use App\Models\File;
 use App\Models\User;
 use App\Policies\FilePolicy;
 use App\Policies\ReportPolicy;
+use App\Policies\BugPolicy;
 use App\Policies\UserPolicy;
+use App\Policies\CommentPolicy;
 use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
@@ -41,6 +43,8 @@ class AuthServiceProvider extends ServiceProvider
         'file' => FilePolicy::class,
         'report' => ReportPolicy::class,
         'user' => UserPolicy::class,
+        'bug' => BugPolicy::class,
+        'comment' => CommentPolicy::class,
     ];
 
     /**
@@ -75,5 +79,7 @@ class AuthServiceProvider extends ServiceProvider
                 Gate::define($action.'-'.$model, [$this->models[$model], $action]);
             }
         }
+        Gate::define('push-bug', [BugPolicy::class, 'push']);
+        Gate::define('filter-file', [FilePolicy::class, 'filter']);
     }
 }
