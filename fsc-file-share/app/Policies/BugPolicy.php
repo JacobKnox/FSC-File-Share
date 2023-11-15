@@ -35,7 +35,7 @@ class BugPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(): Response
+    public function create(?User $user): Response
     {
         return Response::allow();
     }

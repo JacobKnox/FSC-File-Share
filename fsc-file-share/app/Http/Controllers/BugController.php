@@ -25,7 +25,7 @@ class BugController extends Controller
         $response = Gate::inspect('create-bug');
         if($response->allowed())
         {
-            return view('bugreport');
+            return view('bug-report');
         }
         return back()->with('auth_error', $response->message());
     }
@@ -35,10 +35,15 @@ class BugController extends Controller
      */
     public function store(BugCreateRequest $request)
     {
-        $validatedData = $request->validated();
-        $validatedData['reporter'] = $request->user() ? $request->user()->id : -1;
-        Bug::create($validatedData);
-        return redirect()->intended('/');
+        $response = Gate::inspect('create-bug');
+        if($response->allowed())
+        {
+            $validatedData = $request->validated();
+            $validatedData['reporter'] = $request->user() ? $request->user()->id : -1;
+            Bug::create($validatedData);
+            return back()->with('success', 'Thank you for reporting this bug! Your contributions to improving FSC File Share matter.');
+        }
+        return back()->with('auth_error', $response->message());
     }
 
     /**

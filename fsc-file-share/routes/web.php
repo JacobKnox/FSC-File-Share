@@ -43,11 +43,10 @@ Route::controller(UserController::class)->group(function () {
     Route::middleware(['auth', /*'verified'*/])->group(function () {
         Route::get('/logout', 'unauthenticate')->name('logout');
         Route::get('/users/{user_id}', 'show');
-        Route::middleware(['auth.user'])->group(function () {
-            Route::get('/users/settings/{user_id}', 'edit');
-            Route::put('/users/{user_id}', 'update');
-            Route::delete('/users/{user_id}', 'destroy');
-        });
+        Route::get('/users/settings/{user_id}', 'edit');
+        Route::put('/users/{user_id}', 'update');
+        Route::put('/users/{user_id}/password', 'changePassword');
+        Route::delete('/users/{user_id}', 'destroy');
     });
 });
 

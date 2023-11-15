@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PasswordChangeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -79,6 +80,17 @@ class UserController extends Controller
         // Need to add error handling here
         User::findOrFail($id)->update($request->validated());
         return redirect('/users/' . $id);
+    }
+
+    /**
+     * Change the users password
+     */
+    public function changePassword(PasswordChangeRequest $request, string $id)
+    {
+        $user = User::findOrFail($id);
+        $user->password = $request->validated("npassword");
+        $user->save();
+        return redirect('/users/' . $id)->with('success', 'Password successfully updated!');
     }
 
     /**

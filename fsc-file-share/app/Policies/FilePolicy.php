@@ -35,7 +35,7 @@ class FilePolicy
     /**
      * Determine whether the user can filter files.
      */
-    public function filter(): Response
+    public function filter(?User $user): Response
     {
         return Response::allow();
     }
@@ -59,7 +59,7 @@ class FilePolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(?User $user, ?File $file): Response
+    public function restore(?User $user): Response
     {
         return ($user?->checkRoles(['admin'])) ? Response::allow() : Response::deny("Must have admin privileges.");
     }
@@ -67,7 +67,7 @@ class FilePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(?User $user, ?File $file): Response
+    public function forceDelete(?User $user): Response
     {
         return ($user?->checkRoles(['admin'])) ? Response::allow() : Response::deny("Must have admin privileges.");
     }

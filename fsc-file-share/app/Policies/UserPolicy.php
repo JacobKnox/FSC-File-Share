@@ -36,7 +36,7 @@ class UserPolicy
      */
     public function update(?User $user, ?User $model): Response
     {
-        return ($user?->id === $model?->id || $user?->checkRoles(['mod', 'admin'], False)) ? Response::allow() : Response::deny("Hey, that's not your account!");
+        return ($user?->id === $model?->id || $user?->checkRoles(['mod', 'admin'], False)) ? Response::allow() : Response::deny("Hey, that's not your account!", 403);
     }
 
     /**
@@ -44,13 +44,13 @@ class UserPolicy
      */
     public function delete(?User $user, ?User $model): Response
     {
-        return ($user?->id === $model?->id || $user?->checkRoles(['mod', 'admin'], False)) ? Response::allow() : Response::deny("Hey, that's not your account!");
+        return ($user?->id === $model?->id || $user?->checkRoles(['mod', 'admin'], False)) ? Response::allow() : Response::deny("Hey, that's not your account!", 403);
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(?User $user, ?User $model): Response
+    public function restore(?User $user): Response
     {
         return ($user?->checkRoles(['admin'])) ? Response::allow() : Response::deny("Must have admin privileges.");
     }
@@ -58,7 +58,7 @@ class UserPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(?User $user, ?User $model): Response
+    public function forceDelete(?User $user): Response
     {
         return ($user?->checkRoles(['admin'])) ? Response::allow() : Response::deny("Must have admin privileges.");
     }
