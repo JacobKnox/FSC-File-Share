@@ -60,22 +60,6 @@ class File extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function addLike(string $user_id)
-    {
-        if ($this->likes) {
-            Like::create(['file_id' => $this->id, 'user_id' => $user_id]);
-            $this->count_likes += 1;
-            $this->save();
-        }
-    }
-
-    public function removeLike(string $user_id)
-    {
-        Like::where(['file_id' => $this->id, 'user_id' => $user_id])->delete();
-        $this->count_likes -= 1;
-        $this->save();
-    }
-
     public function access()
     {
         return response()->file(Storage::path($this->path));

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteFileRequest;
 use App\Http\Requests\FileCreateRequest;
 use App\Http\Requests\FileFilterRequest;
 use App\Http\Requests\FileUpdateRequest;
@@ -98,20 +99,6 @@ class FileController extends Controller
         return File::findOrFail($id)->download();
     }
 
-    public function like(string $id, string $user)
-    {
-        // Need to add error handling here
-        File::findOrFail($id)->addLike($user);
-        return back();
-    }
-
-    public function unlike(string $id, string $user)
-    {
-        // Need to add error handling here
-        File::findOrFail($id)->removeLike($user);
-        return back();
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -125,15 +112,11 @@ class FileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteFileRequest $request)
     {
-        $response = Gate::inspect('delete-file', File::findOrFail($id));
-        if($response->allowed()){
-            Like::destroy(Like::select('id')->where('file_id', $id)->get());
-            Comment::destroy(Comment::select('id')->where('file_id', $id)->get());
-            File::destroy($id);
-            return redirect('/files');
-        }
-        return back()->with('auth_error', $response->message());
+        Like::destroy(Like::select('id')->where('file_id', $request->file_id)->get());
+        Comment::destroy(Comment::select('id')->where('file_id', $request->file_id)->get());
+        File::destroy($request->file_id);
+        return redirect('/files');
     }
 }

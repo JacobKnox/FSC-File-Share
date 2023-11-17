@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\BugController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ReportController;
 use App\Models\Bug;
 use App\Models\Report;
@@ -57,13 +58,18 @@ Route::controller(FileController::class)->group(function () {
         Route::get('/files/create', 'create');
         Route::post('/files/create', 'store');
         Route::get('/files/{file_id}/download', 'download');
-        Route::get('/files/{file_id}/like/id={user_id}', 'like');
-        Route::get('/files/{file_id}/unlike/id={user_id}', 'unlike');
         Route::delete('/files/{file_id}', 'destroy');
         Route::put('/files/{file_id}', 'update');
     });
     Route::get('/files/{file_id}', 'show');
     Route::get('/files/{file_id}/preview', 'preview');
+});
+
+Route::controller(LikeController::class)->group(function () {
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/files/{file_id}/like/id={user_id}', 'store');
+        Route::get('/files/{file_id}/unlike/id={user_id}', 'destroy');
+    });
 });
 
 Route::controller(ReportController::class)->group(function () {
