@@ -11,4 +11,9 @@ if ($fp) {
 
 return [
     'inappropriate_words' => $words,
+    'report_types' => [
+        0 => 'users',
+        1 => 'files',
+        2 => 'comments',
+    ],
 ];

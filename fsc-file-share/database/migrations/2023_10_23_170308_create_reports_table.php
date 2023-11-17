@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->integer('reporter')->nullable(false)->default(0); # 0 - auto moderator, -1 - guest
-            $table->integer('type')->nullable(false); # 0 - user, 1 - file
+            $table->integer('type')->nullable(false); # 0 - user, 1 - file, 2 - comment
             $table->integer('reported')->nullable(false); # ID of the user or file being reported
             $table->string('category')->nullable(false)->default('Other');
             $table->string('info')->nullable();

@@ -9,6 +9,7 @@ use App\Http\Requests\FileUpdateRequest;
 use App\Models\File;
 use App\Models\Like;
 use App\Models\Comment;
+use App\Models\Warning;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -114,6 +115,15 @@ class FileController extends Controller
      */
     public function destroy(DeleteFileRequest $request)
     {
+        $file = File::find($request->file_id);
+        if($request->user()->checkRoles(['mod', 'admin'], false))
+        {
+            Warning::create([
+                'user_id' => $file->user_id,
+                'issuer' => $request->user()->id,
+                'reason' => 'Get moderated',
+            ]);
+        }
         Like::destroy(Like::select('id')->where('file_id', $request->file_id)->get());
         Comment::destroy(Comment::select('id')->where('file_id', $request->file_id)->get());
         File::destroy($request->file_id);
