@@ -26,6 +26,7 @@ class File extends Model
         'comments',
         'likes',
         'downloads',
+        'visible',
     ];
 
     /**
@@ -96,6 +97,10 @@ class File extends Model
         {
             foreach($checks as $check)
             {
+                // if(str_contains(strtolower(count_chars($input[$check], 3)), strtolower($word)))
+                // {
+                //     array_push($reasons, $check.' contains '.$word);
+                // }
                 if(str_contains(strtolower($input[$check]), strtolower($word)))
                 {
                     array_push($reasons, $check.' contains '.$word);
@@ -112,9 +117,8 @@ class File extends Model
                 'info' => implode(', ', $reasons),
             ]);
             $file->update([
-                'visible' => 0,
+                'visible' => false,
             ]);
-            $file->save();
         }
 
         return $file;
@@ -130,7 +134,6 @@ class File extends Model
             'downloads' => isset($input['downloads']) ? 1 : 0,
             'tags' => isset($input['tags']) ? json_encode($input['tags']) : $this->tags,
         ]);
-        $this->save();
         return $this;
     }
 }
