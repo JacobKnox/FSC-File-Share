@@ -113,7 +113,7 @@ class File extends Model
             'comments' => isset($input['comments']) ? 1 : 0,
             'likes' => isset($input['likes']) ? 1 : 0,
             'downloads' => isset($input['downloads']) ? 1 : 0,
-            'tags' => json_encode($input['tags']),
+            'tags' => isset($input['tags']) ? json_encode($input['tags']) : $this->tags,
         ]);
         $this->save();
         return $this;

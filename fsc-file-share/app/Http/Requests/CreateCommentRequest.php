@@ -3,18 +3,17 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Comment;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CommentDeleteRequest extends FormRequest
+class CreateCommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $response = Gate::inspect('delete-comment', Comment::find($this->comment_id));
+        $response = Gate::inspect('create-comment');
         if($response->allowed())
         {
             return true;
@@ -32,7 +31,7 @@ class CommentDeleteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'content' => 'required',
         ];
     }
 }

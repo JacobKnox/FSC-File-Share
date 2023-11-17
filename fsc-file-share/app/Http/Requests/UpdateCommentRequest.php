@@ -3,17 +3,18 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CommentCreateRequest extends FormRequest
+class UpdateCommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $response = Gate::inspect('create-comment');
+        $response = Gate::inspect('update-comment', Comment::find($this->comment_id));
         if($response->allowed())
         {
             return true;
