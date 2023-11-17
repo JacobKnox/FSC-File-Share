@@ -77,7 +77,11 @@ class File extends Model
 
     public static function createFromInput($request, $input)
     {
-        return File::create([
+        $words = config('mod.inappropriate_words');
+        $checks = ['title', 'description'];
+        dd($words);
+
+        $file = File::create([
             'user_id' => $request->user()->id,
             'title' => $input['title'],
             'description' => $input['description'],
@@ -87,6 +91,32 @@ class File extends Model
             'downloads' => isset($input['downloads']) ? 1 : 0,
             'tags' => isset($input['tags']) ? json_encode($input['tags']) : null,
         ]);
+
+        $info = '';
+        foreach($words as $word)
+        {
+            foreach($checks as $check)
+            {
+                if(str_contains($input[$check], $word))
+                {
+                    $info .= $check.' contains '.$word.',';
+                }
+            }
+        }
+        if($info != '')
+        {
+            Report::create([
+                'reporter' => 0,
+                'type' => 1,
+                'reported' => $file->id,
+                'category' => 'Inappropriate Words',
+                'info' => $info,
+            ]);
+            $file->visible = 0;
+            $file->save();
+        }
+
+        return $file;
     }
 
     public function updateFromInput($input)
