@@ -79,7 +79,7 @@ class File extends Model
     {
         $words = config('mod.inappropriate_words');
         $checks = ['title', 'description'];
-        dd($words);
+        $reasons = [];
 
         $file = File::create([
             'user_id' => $request->user()->id,
@@ -92,27 +92,28 @@ class File extends Model
             'tags' => isset($input['tags']) ? json_encode($input['tags']) : null,
         ]);
 
-        $info = '';
         foreach($words as $word)
         {
             foreach($checks as $check)
             {
-                if(str_contains($input[$check], $word))
+                if(str_contains(strtolower($input[$check]), strtolower($word)))
                 {
-                    $info .= $check.' contains '.$word.',';
+                    array_push($reasons, $check.' contains '.$word);
                 }
             }
         }
-        if($info != '')
+        if(!empty($reasons))
         {
             Report::create([
                 'reporter' => 0,
                 'type' => 1,
                 'reported' => $file->id,
                 'category' => 'Inappropriate Words',
-                'info' => $info,
+                'info' => implode(', ', $reasons),
             ]);
-            $file->visible = 0;
+            $file->update([
+                'visible' => 0,
+            ]);
             $file->save();
         }
 
