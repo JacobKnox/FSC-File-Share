@@ -74,6 +74,7 @@ Route::controller(LikeController::class)->group(function () {
 
 Route::controller(ReportController::class)->group(function () {
     Route::get('/report/{type}/{reported_id}', 'store');
+    Route::put('/reports/{report_id}', 'update');
 });
 
 Route::controller(CommentController::class)->middleware(['auth'])->group(function () {
@@ -86,7 +87,7 @@ Route::controller(CommentController::class)->middleware(['auth'])->group(functio
 
 Route::middleware(['auth:moderator'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('admin.dashboard', ['bugs' => Bug::all(), 'automod' => Report::where('reporter', '=', 0)->get(), 'reports' => Report::where('reporter', '>', 0)->get()]);
+        return view('admin.dashboard', ['bugs' => Bug::all(), 'automod' => Report::where('reporter', '=', 0)->where('resolved', '=', 0)->get(), 'reports' => Report::where('reporter', '>', 0)->where('resolved', '=', 0)->get()]);
     })->name('dashboard');
 });
 

@@ -8,7 +8,7 @@
     <p class="h5 text-center">Auto Mod Alerts</p>
     <div class="container">
         <div class="row row-cols-3">
-            @each('components.cards.automod', $automod, 'report', 'components.empties.automod')
+            @each('components.cards.report', $automod, 'report', 'components.empties.automod')
         </div>
     </div>
     <p class="h5 text-center">User Reports</p>

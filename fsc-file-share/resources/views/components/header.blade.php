@@ -20,6 +20,9 @@
             @auth
                 <a class="{{ config('styles.buttonClasses') }}" href="/users/{{$user->id}}" style="{{ config('styles.buttonStyles') }}">Profile</a>
                 <a class="{{ config('styles.buttonClasses') }}" href="/users/settings/{{$user->id}}" style="{{ config('styles.buttonStyles') }}">Settings</a>
+                @if($user->checkRoles(["mod", "admin"], False))
+                    <a class="{{ config('styles.buttonClasses') }}" href="/dashboard" style="{{ config('styles.buttonStyles') }}">Mod Dashboard</a>
+                @endif
                 <span class="navbar-text text-center d-md-none text-white">Welcome, {{ $user->username }}!</span>
                 <a href="/logout" class="btn btn-bg-danger d-md-none">Logout</a>
             {{-- If they're not, then show the appropriate option to log in --}}

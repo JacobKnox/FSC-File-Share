@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Report;
 use App\Http\Requests\StoreReportRequest;
-use App\Http\Requests\UpdateReportRequest;
+use App\Http\Requests\ResolveReportRequest;
+use App\Models\Comment;
+use App\Models\File;
+use App\Models\User;
+use App\Models\Warning;
 
 class ReportController extends Controller
 {
@@ -56,9 +60,45 @@ class ReportController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateReportRequest $request, Report $report)
+    public function update(ResolveReportRequest $request)
     {
-        //
+        $report = Report::findOrFail($request->report_id);
+        $info = $request->validated();
+        $reported = null;
+        $user = null;
+        switch($report->type){
+            case(0):
+                $reported = User::findOrFail($report->reported);
+                $user = $reported;
+                break;
+            case(1):
+                $reported = File::findOrFail($report->reported);
+                $user = $reported->user;
+                if($info['action'] == 'delete')
+                {
+                    File::destroy($reported->id);
+                }
+                break;
+            case(2):
+                $reported = Comment::findOrFail($report->reported);
+                $user = $reported->user;
+                if($info['action'] == 'delete')
+                {
+                    Comment::destroy($reported->id);
+                }
+                break;
+        }
+        if($info['warn'])
+        {
+            Warning::create([
+                'user_id' => $user?->id,
+                'issuer' => $request->user()?->id,
+                'reason' => $info['reason'],
+                'days_left' => $info['duration'],
+            ]);
+        }
+        $report->update(['resolved' => 1]);
+        return back()->with(['success' => 'Report resolved.']);
     }
 
     /**

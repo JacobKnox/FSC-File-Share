@@ -49,6 +49,14 @@ class ReportPolicy
     }
 
     /**
+     * Determine whether the user can resolve the report
+     */
+    public function resolve(?User $user): Response
+    {
+        return $user->checkRoles(['mod', 'admin'], False) ? Response::allow() : Response::deny("Must have at least moderator privileges.");
+    }
+
+    /**
      * Determine whether the user can restore the model.
      */
     public function restore(?User $user): Response

@@ -22,7 +22,7 @@ class FileController extends Controller
      */
     public function index()
     {
-        return view('file.index', ['files' => File::all()]);
+        return view('file.index', ['files' => File::where('visible', '=', 1)->get()]);
     }
 
     /**
