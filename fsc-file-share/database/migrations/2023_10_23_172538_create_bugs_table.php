@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('other')->nullable();
             $table->string('page')->nullable(false);
             $table->boolean('resolved')->nullable(false)->default(false);
+            $table->boolean('pushed')->nullable(false)->default(false);
             $table->timestamps();
         });
     }

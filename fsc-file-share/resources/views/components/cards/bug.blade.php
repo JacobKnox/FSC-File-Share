@@ -5,14 +5,23 @@
             <p><strong>Intended Action:</strong> {{$bug->intended}}</p>
             <p><strong>Actual Action:</strong> {{$bug->actual}}</p>
             <p><strong>Page:</strong> <a href="{{$bug->page}}">{{$bug->page}}</a></p>
-            <p class="mb-0"><strong>Other Comments:</strong> {{$bug->other ? $bug->other : "None provided"}}</p>
+            <p><strong>Other Comments:</strong> {{$bug->other ? $bug->other : "None provided"}}</p>
+            <p class="{{$bug->pushed ? 'text-success' : 'text-danger'}} mb-0">{{$bug->pushed ? "Pushed" : "Not Pushed"}}</p>
         </div>
         <div class="card-footer p-1 m-auto w-100 row">
-            <form action="/bugs/{{$bug->id}}/push" method="POST" class="col p-1 text-center">
-                @csrf
-                @method("PUT")
-                <button type="submit" class="btn btn-success w-100">Push</button>
-            </form>
+            @if(!$bug->pushed)
+                <form action="/bugs/{{$bug->id}}/push" method="POST" class="col p-1 text-center">
+                    @csrf
+                    @method("PUT")
+                    <button type="submit" class="btn btn-success w-100">Push</button>
+                </form>
+            @else
+                <form action="/bugs/{{$bug->id}}/resolve" method="POST" class="col p-1 text-center">
+                    @csrf
+                    @method("PUT")
+                    <button type="submit" class="btn btn-success w-100">Resolved</button>
+                </form>
+            @endif
             <div class="col p-1">
                 <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#editModal">
                     Edit
