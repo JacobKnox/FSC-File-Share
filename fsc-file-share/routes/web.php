@@ -31,6 +31,8 @@ Route::get('/', function () {
 Route::controller(BugController::class)->group(function () {
     Route::get('/bug', 'create');
     Route::post('/bug', 'store');
+    Route::put('/bugs/{bug_id}/push', 'push');
+    Route::delete('/bugs/{bug_id}/delete', 'destroy');
 });
 
 Route::controller(UserController::class)->group(function () {

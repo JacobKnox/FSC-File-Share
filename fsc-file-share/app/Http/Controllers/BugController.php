@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BugCreateRequest;
+use App\Http\Requests\PushBugRequest;
 use Illuminate\Http\Request;
 use App\Models\Bug;
 use Illuminate\Support\Facades\Gate;
@@ -46,6 +47,17 @@ class BugController extends Controller
         return back()->with('auth_error', $response->message());
     }
 
+    public function push(PushBugRequest $request)
+    {
+        $response = Gate::inspect('push-bug');
+        if($response->allowed())
+        {
+            Bug::find($request->bug_id)?->pushToGH();
+            return back()->with('success', 'This bug has been successfully pushed to GitHub.');
+        }
+        return back()->with('auth_error', $response->message());
+    }
+
     /**
      * Display the specified bug.
      */
@@ -75,6 +87,7 @@ class BugController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Bug::destroy($id);
+        return back()->with('success', 'Bug report successfully deleted.');
     }
 }
