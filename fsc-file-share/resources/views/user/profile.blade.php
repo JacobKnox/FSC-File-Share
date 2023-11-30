@@ -56,8 +56,8 @@
                 </div>
             </div>
         @endif
-
-        <a href="/report/user/{{$user->id}}" class="btn btn-danger">Report</a>
+        
+        <x-forms.report-form id="{{$user->id}}" type="0"></x-forms.report-form>
     </div>
 </x-template>
 

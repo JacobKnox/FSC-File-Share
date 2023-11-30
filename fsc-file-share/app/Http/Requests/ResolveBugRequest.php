@@ -3,16 +3,24 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreReportRequest extends FormRequest
+class ResolveBugRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        $response = Gate::inspect('resolve-bug');
+        if($response->allowed())
+        {
+            return true;
+        }
+        throw new HttpResponseException(
+            back()->with('auth_error', $response->message())
+        );
     }
 
     /**
@@ -23,9 +31,7 @@ class StoreReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required', Rule::in(array_keys(config('mod.report_types')))],
-            'info' => 'nullable',
-            'category' => ['required', Rule::in(config('mod.report_categories'))],
+            //
         ];
     }
 }

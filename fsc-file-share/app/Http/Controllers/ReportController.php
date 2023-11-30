@@ -35,10 +35,12 @@ class ReportController extends Controller
     {
         Report::create([
             'reporter' => $request->user()->id,
-            'type' => $request->type == "user" ? 0 : 1,
+            'type' => intval($request->validated('type')),
+            'info' => $request->validated('info'),
+            'category' => $request->validated('category'),
             'reported' => $request->reported_id,
         ]);
-        return back();
+        return back()->with('success', 'Successfully reported!');
     }
 
     /**

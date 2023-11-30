@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BugCreateRequest;
+use App\Http\Requests\DeleteBugRequest;
 use App\Http\Requests\PushBugRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\ResolveBugRequest;
+use App\Http\Requests\UpdateBugRequest;
 use App\Models\Bug;
 use Illuminate\Support\Facades\Gate;
 
@@ -58,6 +60,17 @@ class BugController extends Controller
         return back()->with('auth_error', $response->message());
     }
 
+    public function resolve(ResolveBugRequest $request)
+    {
+        $response = Gate::inspect('resolve-bug');
+        if($response->allowed())
+        {
+            Bug::find($request->bug_id)?->update(['resolved' => 1]);
+            return back()->with('success', 'This bug has been marked as resolved.');
+        }
+        return back()->with('auth_error', $response->message());
+    }
+
     /**
      * Display the specified bug.
      */
@@ -77,17 +90,28 @@ class BugController extends Controller
     /**
      * Update the specified bug in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateBugRequest $request)
     {
-        //
+        $response = Gate::inspect('update-bug', Bug::find($request->bug_id));
+        if($response->allowed())
+        {
+            Bug::find($request->bug_id)?->update($request->validated());
+            return back()->with('success', 'Bug report successfully update.');
+        }
+        return back()->with('auth_error', $response->message());
     }
 
     /**
      * Remove the specified bug from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteBugRequest $request)
     {
-        Bug::destroy($id);
-        return back()->with('success', 'Bug report successfully deleted.');
+        $response = Gate::inspect('delete-bug', Bug::find($request->bug_id));
+        if($response->allowed())
+        {
+            Bug::destroy($request->bug_id);
+            return back()->with('success', 'Bug report successfully deleted.');
+        }
+        return back()->with('auth_error', $response->message());
     }
 }

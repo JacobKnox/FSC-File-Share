@@ -16,4 +16,8 @@ return [
         1 => 'files',
         2 => 'comments',
     ],
+    'report_categories' => [
+        'inappropriate words',
+        'other',
+    ],
 ];

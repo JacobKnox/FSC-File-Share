@@ -5,7 +5,7 @@
             <p><strong>Intended Action:</strong> {{$bug->intended}}</p>
             <p><strong>Actual Action:</strong> {{$bug->actual}}</p>
             <p><strong>Page:</strong> <a href="{{$bug->page}}">{{$bug->page}}</a></p>
-            <p><strong>Other Comments:</strong> {{$bug->other ? $bug->other : "None provided"}}</p>
+            <p><strong>Other Comments:</strong> {{$bug->other ?? : "No additional information provided."}}</p>
             <p class="{{$bug->pushed ? 'text-success' : 'text-danger'}} mb-0">{{$bug->pushed ? "Pushed" : "Not Pushed"}}</p>
         </div>
         <div class="card-footer p-1 m-auto w-100 row">

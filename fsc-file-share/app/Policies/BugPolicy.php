@@ -25,6 +25,14 @@ class BugPolicy
     }
 
     /**
+     * Determine whether the user can mark models as resolved
+     */
+    public function resolve(?User $user): Response
+    {
+        return $user?->checkRoles(['admin'], True) ? Response::allow() : Response::deny("Must have admin privileges.");
+    }
+
+    /**
      * Determine whether the user can view the model.
      */
     public function view(?User $user, ?Bug $bug): Response

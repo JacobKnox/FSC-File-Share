@@ -89,6 +89,7 @@ class AuthServiceProvider extends ServiceProvider
             }
         }
         Gate::define('push-bug', [BugPolicy::class, 'push']);
+        Gate::define('resolve-bug', [BugPolicy::class, 'resolve']);
         Gate::define('filter-file', [FilePolicy::class, 'filter']);
         Gate::define('resolve-report', [ReportPolicy::class, 'resolve']);
     }
