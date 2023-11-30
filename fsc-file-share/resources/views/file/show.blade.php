@@ -6,13 +6,15 @@
             </div>
             <div class="col text-center">
                 <p class="my-1 fs-4 fw-bold">{{$file->title}}</p>
-                @foreach($file->tags() as $tag)
-                    <form method="POST" action="/files" class="inline">
-                        @csrf
-                        <input type="hidden" name="tags[]" id="tags" class="form-control" value="{{$tag}}">
-                        <button type="submit" class="btn">{{$tag}}</button>
-                    </form>
-                @endforeach
+                @if($file->tags())
+                    @foreach($file->tags() as $tag)
+                        <form method="POST" action="/files" class="inline">
+                            @csrf
+                            <input type="hidden" name="tags[]" id="tags" class="form-control" value="{{$tag}}">
+                            <button type="submit" class="btn">{{$tag}}</button>
+                        </form>
+                    @endforeach
+                @endif
                 {{-- <p class="my-1 fs-6 text-muted text-capitalize">{{implode(', ', $file->tags())}}</p> --}}
                 @if(!isset($file->user))
                     <p class="my-1 fs-6">Uploaded by Deleted User</p>
@@ -235,22 +237,22 @@
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Confirm File Delete</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm File Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this file?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form action="/files/{{$file->id}}" method="POST">
+                    @method("DELETE")
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>Are you sure you want to delete this file?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <form action="/files/{{$file->id}}" method="POST">
-            @method("DELETE")
-            @csrf
-            <button type="submit" class="btn btn-danger">Delete</button>
-          </form>
-        </div>
-      </div>
     </div>
 </div>

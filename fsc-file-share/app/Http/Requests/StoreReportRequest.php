@@ -3,16 +3,16 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\User;
+use Illuminate\Validation\Rule;
 
-class CommentCreateRequest extends FormRequest
+class StoreReportRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return User::find($this->user_id) == $this->user() && config('requests.commentcreate');
+        return true;
     }
 
     /**
@@ -23,7 +23,9 @@ class CommentCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => 'required',
+            'type' => ['required', Rule::in(array_keys(config('mod.report_types')))],
+            'info' => 'nullable',
+            'category' => ['required', Rule::in(config('mod.report_categories'))],
         ];
     }
 }

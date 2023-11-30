@@ -3,17 +3,24 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Comment;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CommentDeleteRequest extends FormRequest
+class PushBugRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        // Config isn't working probably
-        return Comment::find($this->comment_id)->user == $this->user();
+        $response = Gate::inspect('push-bug');
+        if($response->allowed())
+        {
+            return true;
+        }
+        throw new HttpResponseException(
+            back()->with('auth_error', $response->message())
+        );
     }
 
     /**

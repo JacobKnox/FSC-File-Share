@@ -26,6 +26,7 @@ class File extends Model
         'comments',
         'likes',
         'downloads',
+        'visible',
     ];
 
     /**
@@ -40,7 +41,10 @@ class File extends Model
      *
      * @var array<string, string>
      */
-    protected $casts = [];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
     public function user(): BelongsTo
     {
@@ -55,22 +59,6 @@ class File extends Model
     public function getComments(): HasMany
     {
         return $this->hasMany(Comment::class);
-    }
-
-    public function addLike(string $user_id)
-    {
-        if ($this->likes) {
-            Like::create(['file_id' => $this->id, 'user_id' => $user_id]);
-            $this->count_likes += 1;
-            $this->save();
-        }
-    }
-
-    public function removeLike(string $user_id)
-    {
-        Like::where(['file_id' => $this->id, 'user_id' => $user_id])->delete();
-        $this->count_likes -= 1;
-        $this->save();
     }
 
     public function access()
@@ -90,7 +78,11 @@ class File extends Model
 
     public static function createFromInput($request, $input)
     {
-        return File::create([
+        $words = config('mod.inappropriate_words');
+        $checks = ['title', 'description'];
+        $reasons = [];
+
+        $file = File::create([
             'user_id' => $request->user()->id,
             'title' => $input['title'],
             'description' => $input['description'],
@@ -98,8 +90,38 @@ class File extends Model
             'comments' => isset($input['comments']) ? 1 : 0,
             'likes' => isset($input['likes']) ? 1 : 0,
             'downloads' => isset($input['downloads']) ? 1 : 0,
-            'tags' => json_encode($input['tags'])
+            'tags' => isset($input['tags']) ? json_encode($input['tags']) : null,
         ]);
+
+        foreach($words as $word)
+        {
+            foreach($checks as $check)
+            {
+                // if(str_contains(strtolower(count_chars($input[$check], 3)), strtolower($word)))
+                // {
+                //     array_push($reasons, $check.' contains '.$word);
+                // }
+                if(str_contains(strtolower($input[$check]), strtolower($word)))
+                {
+                    array_push($reasons, $check.' contains '.$word);
+                }
+            }
+        }
+        if(!empty($reasons))
+        {
+            Report::create([
+                'reporter' => 0,
+                'type' => 1,
+                'reported' => $file->id,
+                'category' => 'Inappropriate Words',
+                'info' => implode(', ', $reasons),
+            ]);
+            $file->update([
+                'visible' => false,
+            ]);
+        }
+
+        return $file;
     }
 
     public function updateFromInput($input)
@@ -110,8 +132,8 @@ class File extends Model
             'comments' => isset($input['comments']) ? 1 : 0,
             'likes' => isset($input['likes']) ? 1 : 0,
             'downloads' => isset($input['downloads']) ? 1 : 0,
-            'tags' => json_encode($input['tags']),
+            'tags' => isset($input['tags']) ? json_encode($input['tags']) : $this->tags,
         ]);
-        $this->save();
+        return $this;
     }
 }

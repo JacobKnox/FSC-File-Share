@@ -44,8 +44,7 @@
         </x-formrow>
     </form>
     <p class="text-center fw-bold fs-3 mb-0">Change Password</p>
-    <p class="text-center text-danger">This feature does not currently work.</p>
-    <form action="/users/{{$user->id}}" method="POST">
+    <form action="/users/{{$user->id}}/password" method="POST">
         @csrf
         @method("PUT")
         <x-formrow>

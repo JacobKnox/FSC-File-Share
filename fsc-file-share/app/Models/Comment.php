@@ -33,7 +33,10 @@ class Comment extends Model
      *
      * @var array<string, string>
      */
-    protected $casts = [];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
     public function user(): BelongsTo
     {

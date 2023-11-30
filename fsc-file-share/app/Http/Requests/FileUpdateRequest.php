@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\File;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class FileUpdateRequest extends FormRequest
 {
@@ -12,7 +14,14 @@ class FileUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return File::find($this->file_id)?->user == $this->user() && config('requests.fileupdate');
+        $response = Gate::inspect('update-file', File::find($this->file_id));
+        if($response->allowed())
+        {
+            return true;
+        }
+        throw new HttpResponseException(
+            back()->with('auth_error', $response->message())
+        );
     }
 
     /**

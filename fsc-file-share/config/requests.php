@@ -12,9 +12,9 @@ return [
     'userlogin' => env('allforms', true) && true,
     'userupdate' => env('allforms', true) && true,
     'bugs' => [
-        'categories' => ['text-error', 'visual', 'security', 'other'],
+        'categories' => ['text-error', 'visual', 'security', 'other',],
     ],
     'users' => [
-        'status' => ['student', 'faculty'],
+        'status' => ['student', 'faculty',],
     ],
 ];

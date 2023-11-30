@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('likes')->default(0);
             $table->boolean('downloads')->default(0);
             $table->integer('count_likes')->default(0);
+            $table->boolean('visible')->nullable(false)->default(true);
             $table->timestamps();
         });
     }

@@ -3,23 +3,9 @@
         <p>{{$user->name}}</p>
         <p>{{$user->username}}</p>
         <p class="text-center fw-bold fs-3 mb-0">Files Uploaded</p>
-        @if(!$user->files->isEmpty())
-            <div class="row justify-content-center row-cols-1 row-cols-md-2">
-                @foreach($user->files as $file)
-                    <div class="col my-3">
-                        <div class="card mx-auto" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title text-center"><a href="/files/{{$file->id}}" class="card-link">{{$file->title}}</a></h5>
-                                <h6 class="card-subtitle mb-2 text-muted text-capitalize">{{implode(', ', $file->tags())}}</h6>
-                                <p class="card-text">{{$file->description}}</p>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <p class="text-center mt-3 mb-5">This user has not uploaded any files yet.</p>
-        @endif
+        <div class="row justify-content-center row-cols-1 row-cols-md-2">
+            @each('components.cards.file', $user->files, 'file', 'components.empties.file')
+        </div>
         <p class="text-center fw-bold fs-3 mb-0">Comments Left</p>
         @if(!$user->comments->isEmpty())
             <div class="row justify-content-center row-cols-1 row-cols-md-2">
@@ -70,6 +56,8 @@
                 </div>
             </div>
         @endif
+        
+        <x-forms.report-form id="{{$user->id}}" type="0"></x-forms.report-form>
     </div>
 </x-template>
 

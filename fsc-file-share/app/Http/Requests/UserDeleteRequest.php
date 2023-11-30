@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UserDeleteRequest extends FormRequest
 {
@@ -12,7 +14,14 @@ class UserDeleteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return (User::find($this->user_id) == $this->user()) && config('requests.userdelete');
+        $response = Gate::inspect('delete-user', User::find($this->user_id));
+        if($response->allowed())
+        {
+            return true;
+        }
+        throw new HttpResponseException(
+            back()->with('auth_error', $response->message())
+        );
     }
 
     /**

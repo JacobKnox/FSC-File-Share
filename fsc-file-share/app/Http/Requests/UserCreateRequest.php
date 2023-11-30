@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UserCreateRequest extends FormRequest
 {
@@ -13,7 +15,14 @@ class UserCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return !Auth::check() && config('requests.usercreate');
+        $response = Gate::inspect('create-user');
+        if($response->allowed())
+        {
+            return true;
+        }
+        throw new HttpResponseException(
+            back()->with('auth_error', $response->message())
+        );
     }
 
     /**

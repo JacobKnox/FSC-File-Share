@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteFileRequest;
 use App\Http\Requests\FileCreateRequest;
 use App\Http\Requests\FileFilterRequest;
 use App\Http\Requests\FileUpdateRequest;
 use App\Models\File;
 use App\Models\Like;
 use App\Models\Comment;
+use App\Models\Warning;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
+
 
 class FileController extends Controller
 {
@@ -18,7 +22,7 @@ class FileController extends Controller
      */
     public function index()
     {
-        return view('file.index', ['files' => File::all()]);
+        return view('file.index', ['files' => File::where('visible', '=', 1)->get()]);
     }
 
     /**
@@ -73,8 +77,9 @@ class FileController extends Controller
      */
     public function show(string $id)
     {
-        // Need to add error handling here
-        return view('file.show', ['file' => File::findOrFail($id), 'user' => Auth::user()]);
+        $file = File::findOrFail($id);
+        $response = Gate::inspect('view-file', $file);
+        return $response->allowed() ? view('file.show', ['file' => $file, 'user' => Auth::user()]) : back()->with('auth_error', $response->message());
     }
 
     /**
@@ -95,38 +100,33 @@ class FileController extends Controller
         return File::findOrFail($id)->download();
     }
 
-    public function like(string $id, string $user)
-    {
-        // Need to add error handling here
-        File::findOrFail($id)->addLike($user);
-        return back();
-    }
-
-    public function unlike(string $id, string $user)
-    {
-        // Need to add error handling here
-        File::findOrFail($id)->removeLike($user);
-        return back();
-    }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(FileUpdateRequest $request, string $id)
     {
-        // Need to add error handling here
-        File::findOrFail($id)->updateFromInput($request->validated());
-        return redirect('/files/' . $id);
+        $file = File::findOrFail($id);
+        $response = Gate::inspect('update-file', $file);
+        return $response->allowed() ? redirect('/files/' . $file->updateFromInput($request->validated())->id) : back()->with('auth_error', $response->message());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteFileRequest $request)
     {
-        Like::destroy(Like::select('id')->where('file_id', $id)->get());
-        Comment::destroy(Comment::select('id')->where('file_id', $id)->get());
-        File::destroy($id);
+        $file = File::find($request->file_id);
+        if($request->user()->checkRoles(['mod', 'admin'], false))
+        {
+            Warning::create([
+                'user_id' => $file->user_id,
+                'issuer' => $request->user()->id,
+                'reason' => 'Get moderated',
+            ]);
+        }
+        Like::destroy(Like::select('id')->where('file_id', $request->file_id)->get());
+        Comment::destroy(Comment::select('id')->where('file_id', $request->file_id)->get());
+        File::destroy($request->file_id);
         return redirect('/files');
     }
 }

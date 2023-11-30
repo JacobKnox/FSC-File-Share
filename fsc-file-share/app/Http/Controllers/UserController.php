@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PasswordChangeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -82,6 +83,17 @@ class UserController extends Controller
     }
 
     /**
+     * Change the users password
+     */
+    public function changePassword(PasswordChangeRequest $request, string $id)
+    {
+        $user = User::findOrFail($id);
+        $user->password = $request->validated("npassword");
+        $user->save();
+        return redirect('/users/' . $id)->with('success', 'Password successfully updated!');
+    }
+
+    /**
      * Remove the specified user from storage.
      */
     public function destroy(UserDeleteRequest $request, int $id)
@@ -121,7 +133,10 @@ class UserController extends Controller
     public function unauthenticate(Request $request)
     {
         Auth::logout();
-        $request->session()->regenerate();
+        $request->session()->invalidate();
+ 
+        $request->session()->regenerateToken();
+        
         return redirect('/');
     }
 }
