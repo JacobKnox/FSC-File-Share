@@ -13,7 +13,7 @@ use App\Models\Warning;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -69,6 +69,10 @@ class FileController extends Controller
      */
     public function store(FileCreateRequest $request)
     {
+        if(Storage::has('public\uploads\\' . $request->file('file')->getClientOriginalName()))
+        {
+            return back()->with('issues', ['This file already exists.']);
+        }
         return redirect('/files/' . File::createFromInput($request, $request->validated())->id);
     }
 
@@ -116,6 +120,11 @@ class FileController extends Controller
     public function destroy(DeleteFileRequest $request)
     {
         $file = File::find($request->file_id);
+        if(Storage::exists($file->path)){
+            Storage::delete($file->path);
+        }else{
+            dd('File does not exist.');
+        }
         if($request->user()->checkRoles(['mod', 'admin'], false))
         {
             Warning::create([
