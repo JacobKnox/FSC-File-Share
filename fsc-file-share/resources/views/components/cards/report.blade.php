@@ -1,9 +1,9 @@
 <div class="col gx-3 mb-3">
     <div class="card mx-auto mb-2 h-100">
         <div class="card-body">
-            <p><a href="/{{config('mod.report_types')[$report->type]}}/{{$report->reported}}">Link to Reported</a></p>
+            <p><a href="/{{$report->type}}/{{$report->reported}}">Link to Reported</a></p>
             <p><strong>Category:</strong> {{$report->category}}</p>
-            <p><strong>Info:</strong> {{$report->info ?? "No additional info provided."}}</p>
+            <p><strong>Info:</strong> {{$report->info}}</p>
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#resolveModal">
                 Resolve
             </button>

@@ -5,7 +5,7 @@
             <p><strong>Intended Action:</strong> {{$bug->intended}}</p>
             <p><strong>Actual Action:</strong> {{$bug->actual}}</p>
             <p><strong>Page:</strong> <a href="{{$bug->page}}">{{$bug->page}}</a></p>
-            <p><strong>Other Comments:</strong> {{$bug->other ?? : "No additional information provided."}}</p>
+            <p><strong>Other Comments:</strong> {{$bug->other}}</p>
             <p class="{{$bug->pushed ? 'text-success' : 'text-danger'}} mb-0">{{$bug->pushed ? "Pushed" : "Not Pushed"}}</p>
         </div>
         <div class="card-footer p-1 m-auto w-100 row">
@@ -52,10 +52,10 @@
                             <label for="category" class="form-label"><x-asterisk></x-asterisk> Bug Category</label>
                             <select name="category" id="category" class="form-control">
                                 <option value="select" {{ $bug->category == null ? "selected" : "" }} disabled>Select a category:</option>
-                                <option value="text-error" {{ $bug->category == 'text-error' ? "selected" : "" }}>Misspelling/Grammer</option>
-                                <option value="visual" {{ $bug->category == 'visual' ? "selected" : "" }}>Visual/Image</option>
-                                <option value="security" {{ $bug->category == 'security' ? "selected" : "" }}>Security Vulnerability</option>
-                                <option value="other" {{ $bug->category == 'other' ? "selected" : "" }}>Other</option>
+                                @php($cats = config('mod.bug_categories'))
+                                @foreach(array_keys($cats) as $category)
+                                    <option value="{{$category}}" {{ $bug->category == $category ? "selected" : "" }}>{{$cats[$category]}}</option>
+                                @endforeach
                             </select>
                             @error('category')
                                 <div class="alert alert-danger">{{ $message }}</div>

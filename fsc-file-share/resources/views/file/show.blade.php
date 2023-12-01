@@ -6,8 +6,8 @@
             </div>
             <div class="col text-center">
                 <p class="my-1 fs-4 fw-bold">{{$file->title}}</p>
-                @if($file->tags())
-                    @foreach($file->tags() as $tag)
+                @if($file->tags)
+                    @foreach($file->tags as $tag)
                         <form method="POST" action="/files" class="inline">
                             @csrf
                             <input type="hidden" name="tags[]" id="tags" class="form-control" value="{{$tag}}">
@@ -15,7 +15,7 @@
                         </form>
                     @endforeach
                 @endif
-                {{-- <p class="my-1 fs-6 text-muted text-capitalize">{{implode(', ', $file->tags())}}</p> --}}
+                {{-- <p class="my-1 fs-6 text-muted text-capitalize">{{implode(', ', $file->tags)}}</p> --}}
                 @if(!isset($file->user))
                     <p class="my-1 fs-6">Uploaded by Deleted User</p>
                 @else
@@ -221,7 +221,7 @@
                     <label for="tags[]" class="form-label">Tags</label>
                     <select name="tags[]" id="tags" class="form-control" multiple>
                         @foreach(config('misc.tags') as $tag)
-                            <option value="{{$tag}}" @if($file->tags() != null && in_array($tag, $file->tags())) selected @endif>{{ucwords($tag)}}</option>
+                            <option value="{{$tag}}" @if($file->tags != null && in_array(ucwords($tag), $file->tags)) selected @endif>{{ucwords($tag)}}</option>
                         @endforeach
                     </select>
                 </x-formrow>

@@ -33,7 +33,7 @@ class UpdateBugRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => ['required', Rule::in(config('requests.bugs.categories'))],
+            'category' => ['required', Rule::in(array_keys(config('mod.bug_categories')))],
             'intended' => 'required',
             'actual' => 'required',
             'page' => 'required|url',

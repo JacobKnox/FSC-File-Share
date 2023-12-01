@@ -92,10 +92,11 @@ class BugController extends Controller
      */
     public function update(UpdateBugRequest $request)
     {
-        $response = Gate::inspect('update-bug', Bug::find($request->bug_id));
+        $bug = Bug::find($request->bug_id);
+        $response = Gate::inspect('update-bug', $bug);
         if($response->allowed())
         {
-            Bug::find($request->bug_id)?->update($request->validated());
+            $bug?->update($request->validated());
             return back()->with('success', 'Bug report successfully update.');
         }
         return back()->with('auth_error', $response->message());

@@ -19,6 +19,7 @@ class Comment extends Model
         'user_id',
         'file_id',
         'content',
+        'visible',
     ];
 
     /**
@@ -36,6 +37,7 @@ class Comment extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'visible' => 'boolean',
     ];
 
     public function user(): BelongsTo

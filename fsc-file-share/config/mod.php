@@ -20,4 +20,10 @@ return [
         'inappropriate words',
         'other',
     ],
+    'bug_categories' => [
+        'Text Error' => 'Misspelling/Grammer',
+        'Visual' => 'Visual/Image',
+        'Security' => 'Security Vulnerability',
+        'Other' => 'Other',
+    ],
 ];

@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable # implements MustVerifyEmail
 {
@@ -27,6 +28,10 @@ class User extends Authenticatable # implements MustVerifyEmail
         'username',
         'email',
         'pemail',
+        'password',
+        'roles',
+        'visible',
+        'verified',
     ];
 
     /**
@@ -57,9 +62,6 @@ class User extends Authenticatable # implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $hidden = [
-        'sid',
-        'email',
-        'pemail',
         'password',
         'remember_token',
     ];
@@ -75,6 +77,9 @@ class User extends Authenticatable # implements MustVerifyEmail
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'password' => 'hashed',
+        'roles' => 'array',
+        'visible' => 'boolean',
+        'verified' => 'boolean',
     ];
 
     public function files(): HasMany
@@ -99,10 +104,8 @@ class User extends Authenticatable # implements MustVerifyEmail
 
     public static function createFromInput($input)
     {
-        $user = User::create($input);
-        $user->password = Hash::make($input['password']);
-        $user->save();
-
+        User::create($input);
+        
         $credentials = [
             'username' => $input['username'],
             'password' => $input['password'],
@@ -135,7 +138,7 @@ class User extends Authenticatable # implements MustVerifyEmail
     }
 
     public function checkRoles(array $roles, bool $all = True){
-        $user_roles = json_decode($this->roles);
+        $user_roles = $this->roles;
         foreach($roles as $role){
             if(in_array($role, $user_roles, True) && !$all){
                 return True;
@@ -161,10 +164,9 @@ class User extends Authenticatable # implements MustVerifyEmail
                 return False;
             }
         }
-        $current_roles = json_decode($this->roles);
+        $current_roles = $this->roles;
         array_push($current_roles, $roles);
-        $this->roles = json_encode($current_roles);
-        $this->save();
+        $this->update(['roles' => $current_roles]);
         return True;
     }
 
@@ -172,14 +174,34 @@ class User extends Authenticatable # implements MustVerifyEmail
         if(in_array('user', $roles, True)){
             return False;
         }
-        $current_roles = json_decode($this->roles);
+        $current_roles = $this->roles;
         foreach($roles as $role){
             if(in_array($role, $current_roles, True)){
                 unset($current_roles[$role]);
             }
         }
-        $this->roles = json_encode($current_roles);
-        $this->save();
+        $this->update(['roles' => $current_roles]);
         return True;
+    }
+
+    /**
+     * Interact with the users's roles.
+     */
+    protected function roles(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => json_decode($value),
+            set: fn (array $value) => json_encode($value)
+        );
+    }
+
+    /**
+     * Interact with the users's password.
+     */
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => Hash::make($value)
+        );
     }
 }

@@ -77,8 +77,7 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, string $id)
     {
-        // Need to add error handling here
-        User::findOrFail($id)->update($request->validated());
+        User::find($id)?->update($request->validated());
         return redirect('/users/' . $id);
     }
 
@@ -87,9 +86,7 @@ class UserController extends Controller
      */
     public function changePassword(PasswordChangeRequest $request, string $id)
     {
-        $user = User::findOrFail($id);
-        $user->password = $request->validated("npassword");
-        $user->save();
+        User::find($id)?->update(['password' => $request->validated("npassword")]);
         return redirect('/users/' . $id)->with('success', 'Password successfully updated!');
     }
 
@@ -134,9 +131,7 @@ class UserController extends Controller
     {
         Auth::logout();
         $request->session()->invalidate();
- 
         $request->session()->regenerateToken();
-        
         return redirect('/');
     }
 }

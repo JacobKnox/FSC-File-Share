@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class File extends Model
 {
@@ -27,6 +28,7 @@ class File extends Model
         'likes',
         'downloads',
         'visible',
+        'count_likes',
     ];
 
     /**
@@ -44,6 +46,11 @@ class File extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'tags' => 'array',
+        'comments' => 'boolean',
+        'likes' => 'boolean',
+        'downloads' => 'boolean',
+        'visible' => 'boolean',
     ];
 
     public function user(): BelongsTo
@@ -69,11 +76,6 @@ class File extends Model
     public function download()
     {
         return $this->downloads ? response()->download(Storage::path($this->path)) : back();
-    }
-
-    public function tags()
-    {
-        return json_decode($this->tags);
     }
 
     public static function createFromInput($request, $input)
@@ -129,11 +131,22 @@ class File extends Model
         $this->update([
             'title' => $input['title'],
             'description' => $input['description'],
-            'comments' => isset($input['comments']) ? 1 : 0,
-            'likes' => isset($input['likes']) ? 1 : 0,
-            'downloads' => isset($input['downloads']) ? 1 : 0,
-            'tags' => isset($input['tags']) ? json_encode($input['tags']) : $this->tags,
+            'comments' => isset($input['comments']),
+            'likes' => isset($input['likes']),
+            'downloads' => isset($input['downloads']),
+            'tags' => isset($input['tags']) ? $input['tags'] : null,
         ]);
         return $this;
+    }
+
+    /**
+     * Interact with the file's tags.
+     */
+    protected function tags(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => $value != null ? array_map(fn(string $value): string => ucwords($value), json_decode($value)) : null,
+            set: fn (array|null $value) => $value != null ? json_encode($value) : null
+        );
     }
 }

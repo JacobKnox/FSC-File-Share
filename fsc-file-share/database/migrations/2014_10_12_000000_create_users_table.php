@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('pemail')->unique()->nullable();
             $table->timestamp('pemail_verified_at')->nullable();
-            $table->string('password')->nullable();
+            $table->string('password')->nullable(false);
             $table->boolean('visible')->nullable(false)->default(true);
             $table->boolean('verified')->nullable(false)->default(false);
             $table->rememberToken();
