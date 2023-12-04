@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer(['components.template', 'user.profile', 'file.index'], function($view) {
+            $view->with('auth_user', auth()->user());
+        });
     }
 }

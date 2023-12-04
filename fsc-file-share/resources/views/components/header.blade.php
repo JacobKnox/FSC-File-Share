@@ -1,5 +1,3 @@
-@php($user = Auth::user())
-
 <nav class="navbar sticky-top navbar-expand-md text-white mb-4 py-3 px-3" style="background-color:#BA0C2F;">
     <ul class="navbar-nav mx-auto">
         <div class="nav-item text-center">
@@ -18,12 +16,12 @@
             <a class="{{ config('styles.buttonClasses') }}" href="/files" style="{{ config('styles.buttonStyles') }}">Files</a>
             {{-- If the user is logged in (authenticated), then display appropriate links --}}
             @auth
-                <a class="{{ config('styles.buttonClasses') }}" href="/users/{{$user->id}}" style="{{ config('styles.buttonStyles') }}">Profile</a>
-                <a class="{{ config('styles.buttonClasses') }}" href="/users/settings/{{$user->id}}" style="{{ config('styles.buttonStyles') }}">Settings</a>
-                @if($user->checkRoles(["mod", "admin"], False))
+                <a class="{{ config('styles.buttonClasses') }}" href="/users/{{$auth_user->id}}" style="{{ config('styles.buttonStyles') }}">Profile</a>
+                <a class="{{ config('styles.buttonClasses') }}" href="/users/settings/{{$auth_user->id}}" style="{{ config('styles.buttonStyles') }}">Settings</a>
+                @if($auth_user->checkRoles(["mod", "admin"], False))
                     <a class="{{ config('styles.buttonClasses') }}" href="/dashboard" style="{{ config('styles.buttonStyles') }}">Mod Dashboard</a>
                 @endif
-                <span class="navbar-text text-center d-md-none text-white">Welcome, {{ $user->username }}!</span>
+                <span class="navbar-text text-center d-md-none text-white">Welcome, {{ $auth_user->username }}!</span>
                 <a href="/logout" class="btn btn-bg-danger d-md-none">Logout</a>
             {{-- If they're not, then show the appropriate option to log in --}}
             @else
@@ -33,7 +31,7 @@
             @endif
         </ul>
         @auth
-            <span class="navbar-text d-none d-md-flex text-white flex-fill justify-content-end">Welcome, {{ $user->username }}!</span>
+            <span class="navbar-text d-none d-md-flex text-white flex-fill justify-content-end">Welcome, {{ $auth_user->username }}!</span>
             <a href="/logout" class="d-none d-md-flex btn btn-bg-danger">Logout</a>
         @else
             {{-- Login form, hidden on screens smaller than medium (when burger pops up) --}}

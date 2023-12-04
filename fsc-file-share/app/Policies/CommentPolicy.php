@@ -13,7 +13,7 @@ class CommentPolicy
      */
     public function viewAny(?User $user): Response
     {
-        return $user?->checkRoles(['mod', 'admin'], False) ? Response::allow() : Response::deny("Must have at least moderator privileges.");
+        return Response::allow();
     }
 
     /**

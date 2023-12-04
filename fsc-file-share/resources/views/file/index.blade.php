@@ -43,7 +43,9 @@
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-3 gy-3 mt-3">
-            @each('components.cards.file', $files, 'file', 'components.empties.file')
+            @foreach($files as $file)
+                @include('components.cards.file', ['file' => $file])
+            @endforeach
         </div>
     </div>
 </x-template>

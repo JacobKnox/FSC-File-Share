@@ -4,7 +4,9 @@
         <p>{{$user->username}}</p>
         <p class="text-center fw-bold fs-3 mb-0">Files Uploaded</p>
         <div class="row justify-content-center row-cols-1 row-cols-md-2">
-            @each('components.cards.file', $user->files, 'file', 'components.empties.file')
+            @foreach($user->files as $file)
+                @include('components.cards.file', ['file' => $file])
+            @endforeach
         </div>
         <p class="text-center fw-bold fs-3 mb-0">Comments Left</p>
         @if(!$user->comments->isEmpty())

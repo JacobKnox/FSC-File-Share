@@ -7,12 +7,9 @@ use App\Http\Requests\FileCreateRequest;
 use App\Http\Requests\FileFilterRequest;
 use App\Http\Requests\FileUpdateRequest;
 use App\Models\File;
-use App\Models\Like;
-use App\Models\Comment;
 use App\Models\Warning;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
@@ -22,6 +19,7 @@ class FileController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', File::class);
         return view('file.index', ['files' => File::where('visible', '=', 1)->get()]);
     }
 
@@ -30,6 +28,7 @@ class FileController extends Controller
      */
     public function filter(FileFilterRequest $request)
     {
+        $this->authorize('filter', File::class);
         $criteria = $request->validated();
         
         if(!isset($criteria['tags'])){
@@ -61,6 +60,7 @@ class FileController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', File::class);
         return view('file.create');
     }
 
@@ -69,6 +69,7 @@ class FileController extends Controller
      */
     public function store(FileCreateRequest $request)
     {
+        $this->authorize('create', File::class);
         if(Storage::has('public\uploads\\' . $request->file('file')->getClientOriginalName()))
         {
             return back()->with('issues', ['This file already exists.']);
@@ -79,26 +80,27 @@ class FileController extends Controller
     /**
      * Display the specified file.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
         $file = File::findOrFail($id);
-        $response = Gate::inspect('view-file', $file);
-        return $response->allowed() ? view('file.show', ['file' => $file, 'user' => Auth::user()]) : back()->with('auth_error', $response->message());
+        $this->authorize('view', $file);
+        return view('file.show', ['file' => $file, 'user' => Auth::user()]);
     }
 
     /**
      * Display the file.
      */
-    public function preview(string $id)
+    public function preview(int $id)
     {
-        // Need to add error handling here
-        return File::findOrFail($id)->access();
+        $file = File::findOrFail($id);
+        $this->authorize('view', $file);
+        return $file->access();
     }
 
     /**
      * Force the user's browser to download the file.
      */
-    public function download(string $id)
+    public function download(int $id)
     {
         // Need to add error handling here
         return File::findOrFail($id)->download();
@@ -107,11 +109,11 @@ class FileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(FileUpdateRequest $request, string $id)
+    public function update(FileUpdateRequest $request)
     {
-        $file = File::findOrFail($id);
-        $response = Gate::inspect('update-file', $file);
-        return $response->allowed() ? redirect('/files/' . $file->updateFromInput($request->validated())->id) : back()->with('auth_error', $response->message());
+        $file = File::findOrFail($request->file_id);
+        $this->authorize('update', $file);
+        return redirect('/files/' . $file->updateFromInput($request->validated())->id);
     }
 
     /**
@@ -119,13 +121,12 @@ class FileController extends Controller
      */
     public function destroy(DeleteFileRequest $request)
     {
-        $file = File::find($request->file_id);
+        $file = File::findOrFail($request->file_id);
+        $this->authorize('delete', $file);
         if(Storage::exists($file->path)){
             Storage::delete($file->path);
-        }else{
-            dd('File does not exist.');
         }
-        if($request->user()->checkRoles(['mod', 'admin'], false))
+        if($request->user()->checkRoles(['mod', 'admin'], false) && $request->user()->id != $file->user_id)
         {
             Warning::create([
                 'user_id' => $file->user_id,
@@ -133,9 +134,9 @@ class FileController extends Controller
                 'reason' => 'Get moderated',
             ]);
         }
-        Like::destroy(Like::select('id')->where('file_id', $request->file_id)->get());
-        Comment::destroy(Comment::select('id')->where('file_id', $request->file_id)->get());
-        File::destroy($request->file_id);
+        $file->getLikes()->delete();
+        $file->getComments()->delete();
+        $file->delete();
         return redirect('/files');
     }
 }

@@ -108,7 +108,8 @@
                                 </form>
                             </div>
                         @endif
-                        @if($file->getComments->isEmpty())
+                        @php($comments = $file->getComments)
+                        @if($comments->isEmpty())
                             @if($file->comments)
                                 <p class="pt-2">Looks like there aren't any comments right now.<br>Be the first to comment on this file.</p>
                             @else
@@ -116,7 +117,7 @@
                             @endif
                         @else
                             <div class="row row-cols-1 text-start">
-                                @foreach($file->getComments as $comment)
+                                @foreach($file->comments as $comment)
                                     <div class='col container'>
                                         <div class="row row-cols-2">
                                             <div class="col">

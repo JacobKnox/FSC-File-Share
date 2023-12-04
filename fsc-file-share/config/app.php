@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'FSC File Share'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,8 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => env('APP_ENV', 'production') == 'production' ? false : (bool) env('APP_DEBUG', false),
+    // I added the condition as a little extra safety net in case I'm air headed
 
     /*
     |--------------------------------------------------------------------------

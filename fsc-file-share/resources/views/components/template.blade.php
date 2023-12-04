@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     </head>
     <body>
-        <x-header/>
+        @include('components.header')
         <div class="mx-2 px-2">
             @if(session('issues') != null)
                 @foreach(session('issues') as $issue)
@@ -29,11 +29,7 @@
             @if(session('success') != null)
                 <div class="bg-success text-white py-3 mb-4 text-center">{{session('success')}}</div>
             @endif
-            {{-- @if(isset($problems))
-                @foreach($problems as $problem)
-                    <div class="bg-danger text-white py-3 text-center">{{$problem}}</div>
-                @endforeach
-            @endif --}}
+
             {{ $slot }}
         </div>
         <x-footer/>
